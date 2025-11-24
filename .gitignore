@@ -1,33 +1,10 @@
-# Node
 node_modules/
-
-# Build / hosting output
 dist/
 .vercel/
-
-# Environment variables
 .env
 .env.local
-.env.*.local
-
-# Secrets local file (if you use config.local.js)
 src/assets/js/config.local.js
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# OS-specific
 .DS_Store
 Thumbs.db
-
-# Editor folders
 .vscode/
 .idea/
-
-# Generated lock files (optional)
-package-lock.json
-pnpm-lock.yaml
-yarn.lock
