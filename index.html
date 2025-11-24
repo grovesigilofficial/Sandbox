@@ -7,17 +7,20 @@
   <script type="module" src="src/assets/js/counter.js" defer></script>
 </head>
 <body>
-  <main style="max-width:900px;margin:40px auto;">
+  <main class="container">
     <h1>Grove Portal</h1>
     <h2>Uberman Sleep Day: <span id="counter-display">0</span></h2>
 
-    <div style="margin-top:20px;">
+    <div class="controls">
       <button id="increment-btn">Increment Day</button>
       <button id="reset-btn">Reset Day</button>
     </div>
 
-    <p style="margin-top:20px;"><a href="lock.html">Admin Login</a></p>
-    <p><a href="dashboard.html">Dashboard</a></p>
+    <nav class="nav">
+      <a href="lock.html">Admin Login</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="admin.html">Admin Panel</a>
+    </nav>
   </main>
 </body>
 </html>
