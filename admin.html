@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="src/assets/js/supabase.js" defer></script>
+</head>
+<body>
+  <main style="max-width:700px;margin:40px auto;">
+    <h1>Admin — user lookup</h1>
+    <label>Username</label><br/>
+    <input id="lookup-username" /><button id="lookup-btn">Lookup</button>
+    <pre id="lookup-result"></pre>
+  </main>
+
+  <script type="module">
+    import { supabase } from './src/assets/js/supabase.js';
+    const btn = document.getElementById('lookup-btn');
+    const input = document.getElementById('lookup-username');
+    const out = document.getElementById('lookup-result');
+
+    btn.addEventListener('click', async () => {
+      const username = input.value;
+      if (!username) return out.textContent = 'enter username';
+      const { data, error } = await supabase.from('admins').select('*').eq('username', username).maybeSingle();
+      if (error) out.textContent = 'error: ' + JSON.stringify(error);
+      else out.textContent = JSON.stringify(data, null, 2);
+    });
+  </script>
+</body>
+</html>
