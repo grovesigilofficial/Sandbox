@@ -1,50 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Dashboard — Sandbox</title>
-  <link rel="stylesheet" href="style.css" />
-  <script type="module" src="src/assets/js/counter.js" defer></script>
-  <script type="module" src="src/assets/js/headphoneAlarm.js" defer></script>
+<meta charset="utf-8">
+<title>Dashboard — Sandbox</title>
+<link rel="stylesheet" href="style.css">
+<script type="module" src="src/assets/js/counter.js" defer></script>
+<script type="module" src="src/assets/js/headphoneAlarm.js" defer></script>
 </head>
 <body>
-  <main class="container">
-    <h1>Sandbox Dashboard</h1>
+<main class="container">
+<h1>Sandbox Dashboard</h1>
 
-    <section style="margin-top:20px;">
-      <h2>Uberman Cycle</h2>
-      <p>Next nap time: <strong id="next-nap">--:--</strong></p>
-      <p>Time remaining: <strong id="time-remaining">--</strong></p>
-      <p>Uberman Sleep Day: <strong id="counter-display">0</strong></p>
-      <p>Current: <span id="live-timer">00:00:00.000</span></p>
-    </section>
+<section style="margin-top:20px;">
+  <h2>Uberman Cycle</h2>
+  <p>Next nap time: <strong id="next-nap">--:--</strong></p>
+  <p>Time remaining: <strong id="time-remaining">--</strong></p>
+  <p>Uberman Sleep Day: <strong id="counter-display">0</strong></p>
+  <p>Current: <span id="live-timer">00:00:00.000</span></p>
+</section>
 
-    <section style="margin-top:20px;">
-      <h2>Headphone Alarm</h2>
-      <button id="test-alarm-btn">Test Alarm</button>
-      <p id="alarm-status">Status: idle</p>
-    </section>
+<section style="margin-top:20px;">
+  <h2>Headphone Alarm</h2>
+  <button id="test-alarm-btn">Test Alarm</button>
+  <p id="alarm-status">Status: idle</p>
+</section>
 
-    <p style="margin-top:24px;"><a href="index.html">Back Home</a></p>
-  </main>
+<p style="margin-top:24px;"><a href="index.html">Back Home</a></p>
+</main>
 
-  <script type="module">
-    // Enforce local admin session for sandbox dashboard
-    if (localStorage.getItem('grove_admin_logged_in') !== 'true') {
-      // redirect to lock/login if not admin
-      window.location.href = 'lock.html';
-    }
+<script type="module">
+if(localStorage.getItem('grove_admin_logged_in') !== 'true'){
+  window.location.href = 'lock.html';
+}
 
-    // Hook the test alarm button
-    import('/src/assets/js/headphoneAlarm.js').then(mod => {
-      const btn = document.getElementById('test-alarm-btn');
-      const status = document.getElementById('alarm-status');
-      btn.addEventListener('click', async () => {
-        status.textContent = 'Status: playing';
-        await mod.playAlarm();
-        setTimeout(() => { status.textContent = 'Status: idle'; }, 5000);
-      });
-    });
-  </script>
+import('/src/assets/js/headphoneAlarm.js').then(mod=>{
+  const btn = document.getElementById('test-alarm-btn');
+  const status = document.getElementById('alarm-status');
+  btn.addEventListener('click', async()=>{
+    status.textContent = 'Status: playing';
+    await mod.playAlarm();
+    setTimeout(()=>{status.textContent='Status: idle';},5000);
+  });
+});
+</script>
 </body>
 </html>
