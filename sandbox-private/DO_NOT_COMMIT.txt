@@ -1,0 +1,65 @@
+─────────────────────────────────────────────
+GrovePortal-Sandbox — PRIVATE FOLDER NOTES
+─────────────────────────────────────────────
+
+⚠ WARNING:
+This folder is private. DO NOT COMMIT these files publicly. 
+Contains real admin credentials, local assets, and sensitive code.
+
+─────────────────────────────────────────────
+RULES:
+1. Do not commit anything in the private folders to public repos.
+2. config.local.js contains real admin username/password — keep secure.
+3. secrets.env contains API keys, tokens, or other private credentials.
+4. public/ stores local-only assets like alarm sounds.
+5. src/assets/js/ contains all GrovePortal-Sandbox JavaScript modules.
+6. All HTML files (admin.html, dashboard.html, index.html, lock.html) and style.css are included here.
+7. DO_NOT_COMMIT.txt itself is safe to commit; it only contains documentation and warnings.
+8. No extra folders or files should be added outside this structure.
+
+─────────────────────────────────────────────
+FILE STRUCTURE & DESCRIPTIONS:
+
+sandbox-private/
+├── DO_NOT_COMMIT.txt
+│   ← This file: documentation, rules, notes, structure explanation
+
+├── public/
+│   └── alarm.mp3
+│       ← Local alarm sound for headphone tests (not public)
+
+├── src/
+│   └── assets/
+│       └── js/
+│           ├── auth.js
+│           │   ← Handles local admin login (username/password)
+│           ├── config.default.js
+│           │   ← Default config placeholders (safe for commits)
+│           ├── config.local.js
+│           │   ← Real admin username/password (local-only)
+│           ├── counter.js
+│           │   ← Uberman sleep day counter, live timer display
+│           └── headphoneAlarm.js
+│               ← Plays/stops alarm through headphones
+
+├── admin.html
+│   ← Admin panel page (protected)
+
+├── dashboard.html
+│   ← Main dashboard displaying Uberman cycle, timer, and alarm controls
+
+├── index.html
+│   ← Homepage for GrovePortal-Sandbox
+
+├── lock.html
+│   ← Admin login page
+
+├── style.css
+│   ← Stylesheet for all pages
+
+─────────────────────────────────────────────
+USAGE NOTES:
+- This folder is fully self-contained.
+- Keep all sensitive credentials in config.local.js or secrets.env.
+- Only these files exist in the repo; no other files or folders should be present.
+- Use DO_NOT_COMMIT.txt for reference whenever you add or change files.
