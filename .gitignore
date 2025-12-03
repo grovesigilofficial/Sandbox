@@ -1,0 +1,13 @@
+# Node
+node_modules/
+
+# local env / secrets
+.env
+.env.local
+src/assets/js/config.local.js
+
+# build / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
