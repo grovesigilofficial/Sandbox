@@ -1,6 +1,7 @@
-// Safe defaults — never commit secrets
 export const CONFIG = {
-  LOCAL_COUNTER_KEY: "grove_uberman_day",
-  adminUsername: "admin-placeholder",
-  adminPassword: "password-placeholder"
+    adminUsername: "admin",
+    adminPassword: "password",
+    ubermanCycle: 24, // hours
+    napDuration: 20,  // minutes
+    alarmSound: "/sandbox-private/public/alarm.mp3"
 };
