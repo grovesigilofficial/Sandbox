@@ -1,28 +1,26 @@
-import { CONFIG as DEFAULT_CONFIG } from './config.default.js';
+// GrovePortal-Sandbox — Local Admin Auth
 
-let CONFIG = DEFAULT_CONFIG;
+const USER = "admin";
+const PASS = "password123";
 
-(async () => {
-  try {
-    const local = await import('./config.local.js');
-    if (local && local.CONFIG) CONFIG = local.CONFIG;
-  } catch(e){}
+export function login(username, password) {
+  if (username === USER && password === PASS) {
+    localStorage.setItem('grove_admin_logged_in', 'true');
+    alert("Logged into GrovePortal-Sandbox Admin");
+    window.location.href = "dashboard.html";
+  } else {
+    alert("Invalid credentials — GrovePortal-Sandbox");
+  }
+}
 
-  const form = document.getElementById('login-form');
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("login-form");
   if (!form) return;
 
-  form.addEventListener('submit', async e => {
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-
-    if (username === CONFIG.adminUsername && password === CONFIG.adminPassword) {
-      localStorage.setItem('grove_admin_logged_in', 'true');
-      const mod = await import('./counter.js');
-      await mod.incrementDay();
-      window.location.href = 'dashboard.html';
-    } else {
-      alert('Invalid credentials');
-    }
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    login(username, password);
   });
-})();
+});
