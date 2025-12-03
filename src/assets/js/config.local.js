@@ -1,7 +1,5 @@
 export const CONFIG = {
-    adminUsername: "your_real_admin",
-    adminPassword: "your_real_password",
-    apiKeys: {
-        exampleKey: "your_real_key"
-    }
+  LOCAL_COUNTER_KEY: "grove_uberman_day",
+  adminUsername: "Bleedvow",          // change to your admin username
+  adminPassword: "S0m3$tr0ngP@ssw0rd" // change to your admin password
 };
