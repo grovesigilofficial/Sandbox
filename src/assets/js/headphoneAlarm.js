@@ -1,10 +1,30 @@
-let alarmAudio = new Audio("/sandbox-private/public/alarm.mp3");
+// GrovePortal-Sandbox — Headphone Alarm Module
 
-export function playAlarm() {
-    alarmAudio.play();
+let audio;
+
+// Preload soft loop sound
+async function loadSound() {
+  if (!audio) {
+    audio = new Audio("public/alarm.mp3"); // Corrected path
+    audio.loop = true;
+  }
+  return audio;
+}
+
+export async function playAlarm() {
+  const sound = await loadSound();
+  try {
+    await sound.play();
+    console.log("Alarm started — GrovePortal-Sandbox");
+  } catch (e) {
+    console.log("Playback blocked, waiting for user gesture — GrovePortal-Sandbox");
+  }
 }
 
 export function stopAlarm() {
-    alarmAudio.pause();
-    alarmAudio.currentTime = 0;
+  if (audio) {
+    audio.pause();
+    audio.currentTime = 0;
+    console.log("Alarm stopped — GrovePortal-Sandbox");
+  }
 }
