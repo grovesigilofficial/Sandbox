@@ -1,9 +1,0 @@
-{
-  "name": "grove-portal-sandbox",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "start": "echo 'Local sandbox — open index.html in browser (no server required)'"
-  },
-  "dependencies": {}
-}
