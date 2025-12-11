@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Admin Panel — Grove Portal</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="admin">
+  <div class="container">
+    <h1>Admin Panel — GrovePortal</h1>
+
+    <div id="statusBlock" class="panel">
+      <p id="ubermanStatus">Loading...</p>
+      <p id="elapsed"></p>
+      <p id="currentTime"></p>
+      <p id="nextNap"></p>
+      <p id="savedStart" style="margin-top:8px;"></p>
+    </div>
+
+    <div class="panel">
+      <button id="startButton">Start Uberman Now</button>
+      <button id="resetButton">Reset Uberman</button>
+    </div>
+
+    <div class="panel">
+      <h3>Set exact start time (local):</h3>
+      <input type="datetime-local" id="manualStart" />
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button id="saveManual">Save Start Time</button>
+        <button id="clearManual">Clear Saved Time</button>
+      </div>
+      <p id="save-status" class="muted"></p>
+    </div>
+
+    <a class="back" href="../index.html">← Back Home</a>
+  </div>
+
+  <script type="module" src="../js/admin/admin.js"></script>
+</body>
+</html>
