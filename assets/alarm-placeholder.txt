@@ -1,0 +1,2 @@
+You removed alarm.mp3. Put your alarm audio file here as "alarm.mp3" (root). 
+If you do not add a real file, the alarm system will play a generated tone fallback.
