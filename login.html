@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GroveSigilOfficial • Sign Up / Login</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    body {
+      background: #000;
+      color: #ff3a3a;
+      font-family: "Oswald", system-ui, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-container {
+      background: #111;
+      padding: 40px;
+      border: 2px solid #ff3a3a;
+      border-radius: 12px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h2 { margin-bottom: 24px; }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ff3a3a;
+      border-radius: 6px;
+      background: #000;
+      color: #ff3a3a;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      width: 100%;
+      background: #ff3a3a;
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover { opacity: 0.9; }
+    .hidden { display: none; }
+    .error { color: #ff7777; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2 id="form-title">Sign Up</h2>
+
+    <!-- Step 1: Email -->
+    <div class="step" id="step-1">
+      <input type="email" id="email" placeholder="Email" required />
+      <div class="error" id="email-error"></div>
+      <button id="next-1">Next</button>
+    </div>
+
+    <!-- Step 2: Full Name -->
+    <div class="step hidden" id="step-2">
+      <input type="text" id="full-name" placeholder="Full Name" required />
+      <div class="error" id="name-error"></div>
+      <button id="next-2">Next</button>
+    </div>
+
+    <!-- Step 3: Username -->
+    <div class="step hidden" id="step-3">
+      <input type="text" id="username" placeholder="Username" required />
+      <div class="error" id="username-error"></div>
+      <button id="next-3">Next</button>
+    </div>
+
+    <!-- Step 4: Password -->
+    <div class="step hidden" id="step-4">
+      <input type="password" id="password" placeholder="Password" required />
+      <input type="password" id="confirm-password" placeholder="Confirm Password" required />
+      <div class="error" id="password-error"></div>
+      <button id="next-4">Next</button>
+    </div>
+
+    <!-- Step 5: Date of Birth -->
+    <div class="step hidden" id="step-5">
+      <input type="date" id="dob" required />
+      <div class="error" id="dob-error"></div>
+      <button id="submit-signup">Sign Up</button>
+    </div>
+
+    <!-- Step 6: Login toggle -->
+    <div id="login-toggle" class="hidden" style="margin-top: 16px;">
+      Already have an account? <span id="show-login" style="cursor:pointer; text-decoration:underline;">Log In</span>
+    </div>
+
+    <!-- Login Step -->
+    <div class="step hidden" id="login-step">
+      <input type="email" id="login-email" placeholder="Email" required />
+      <input type="password" id="login-password" placeholder="Password" required />
+      <div class="error" id="login-error"></div>
+      <button id="login-btn">Log In</button>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
