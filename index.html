@@ -12,11 +12,7 @@
       --modal-bg: rgba(0, 0, 0, 0.95);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin:0; padding:0; }
 
     body {
       height: 100vh;
@@ -57,10 +53,23 @@
       transition: all 0.3s ease;
     }
 
-    button:hover {
+    button:hover { background: var(--text); color: var(--bg); }
+
+    /* Floating login button */
+    #loginBtn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 20;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      border-radius: 8px;
       background: var(--text);
       color: var(--bg);
+      border: none;
     }
+
+    #loginBtn:hover { opacity: 0.9; }
 
     .modal {
       display: none;
@@ -96,16 +105,20 @@
       cursor: pointer;
     }
 
-    .close:hover {
-      color: #ff7777;
-    }
+    .close:hover { color: #ff7777; }
+
   </style>
 </head>
-
 <body>
   <h1>GroveSigilOfficial</h1>
+
+  <!-- Story modal button -->
   <button id="openStory">How My Spiritual Awakening Started</button>
 
+  <!-- Floating Login/Signup button -->
+  <button id="loginBtn">Login / Sign Up</button>
+
+  <!-- Story Modal -->
   <div id="storyModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
@@ -186,18 +199,17 @@ A story of a mind pushed open by chemicals, pain, and stillness… and a person 
   </div>
 
   <script>
+    // Story Modal
     const modal = document.getElementById("storyModal");
     const btn = document.getElementById("openStory");
     const span = document.getElementsByClassName("close")[0];
-
     btn.onclick = () => modal.style.display = "block";
     span.onclick = () => modal.style.display = "none";
+    window.onclick = (event) => { if (event.target === modal) modal.style.display = "none"; };
 
-    window.onclick = (event) => {
-      if (event.target === modal) {
-        modal.style.display = "none";
-      }
-    }
+    // Floating Login / Signup button
+    const loginBtn = document.getElementById("loginBtn");
+    loginBtn.onclick = () => { window.location.href = "login.html"; };
   </script>
 </body>
 </html>
