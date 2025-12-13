@@ -1,161 +1,95 @@
 <!-- =========================================================
-FILE: /login.html
-PURPOSE: Instagram-style Login / Sign Up page
-NOTES:
-- Default view = Sign Up
-- Toggles between Sign Up and Log In
-- Calls signupUser() from /js/auth.js
-- No backend logic here, UI only
+     FILE: /login.html
+     PURPOSE: Instagram-style login / signup page
+     REQUIREMENTS:
+     - /js/auth.js exists and connected to Supabase
+     - /js/login.js will handle login logic
 ========================================================= -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login • GroveSigilOfficial</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GroveSigilOfficial Login</title>
   <style>
     :root {
       --bg: #000;
-      --card: #111;
       --text: #ff3a3a;
-      --muted: #999;
-      --border: #ff3a3a;
+      --glow: 0 0 18px rgba(255, 0, 40, 0.6);
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
+    * { box-sizing:border-box; margin:0; padding:0; }
     body {
-      min-height: 100vh;
       background: var(--bg);
+      color: var(--text);
+      font-family: "Oswald", system-ui, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: system-ui, sans-serif;
-      color: var(--text);
+      height: 100vh;
     }
-
-    .card {
-      width: 100%;
-      max-width: 360px;
-      background: var(--card);
-      border: 2px solid var(--border);
+    .container {
+      background: #111;
+      padding: 32px;
+      border: 2px solid var(--text);
       border-radius: 12px;
-      padding: 24px;
+      max-width: 400px;
+      width: 100%;
       text-align: center;
+      box-shadow: 0 0 20px rgba(255,0,40,0.3);
     }
-
-    h1 {
-      margin-bottom: 20px;
-      letter-spacing: 0.08em;
-    }
-
     input {
       width: 100%;
-      margin-bottom: 12px;
-      padding: 10px;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid var(--text);
       background: #000;
-      border: 1px solid var(--border);
-      border-radius: 6px;
       color: var(--text);
     }
-
-    input::placeholder {
-      color: var(--muted);
-    }
-
     button {
       width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      background: transparent;
-      border: 2px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    button:hover {
+      padding: 12px;
+      margin: 16px 0;
+      border-radius: 8px;
+      border: none;
       background: var(--text);
       color: #000;
-    }
-
-    .toggle {
-      margin-top: 16px;
-      font-size: 0.85rem;
-      color: var(--muted);
+      font-size: 1rem;
       cursor: pointer;
     }
-
-    .toggle span {
-      color: var(--text);
-      font-weight: bold;
-    }
-
-    .hidden {
-      display: none;
-    }
+    button:hover { opacity: 0.9; }
+    .switch { font-size: 0.9rem; cursor: pointer; color: #ff7777; }
   </style>
 </head>
-
 <body>
-
-  <div class="card">
-
-    <h1 id="formTitle">Sign Up</h1>
-
-    <!-- SIGN UP FORM -->
-    <div id="signupForm">
-      <input id="email" type="email" placeholder="Email" />
-      <input id="password" type="password" placeholder="Password" />
-      <input id="username" type="text" placeholder="Username" />
-      <input id="full-name" type="text" placeholder="Full name" />
-      <input id="dob" type="date" />
-
-      <button onclick="signupUser()">Sign Up</button>
-    </div>
-
-    <!-- LOGIN FORM (placeholder for next step) -->
-    <div id="loginForm" class="hidden">
-      <input id="login-email" type="email" placeholder="Email" />
-      <input id="login-password" type="password" placeholder="Password" />
-
-      <button>Log In</button>
-    </div>
-
-    <!-- TOGGLE -->
-    <div class="toggle" id="toggleText">
-      Already have an account? <span>Log in</span>
-    </div>
-
+  <div class="container" id="signup-container">
+    <h2>Sign Up</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <input type="text" id="username" placeholder="Username">
+    <input type="text" id="full-name" placeholder="Full Name">
+    <input type="date" id="dob" placeholder="Date of Birth">
+    <button onclick="signupUser()">Sign Up</button>
+    <p class="switch" onclick="toggleForms()">Already have an account? Log in</p>
   </div>
 
-  <!-- AUTH LOGIC -->
+  <div class="container" id="login-container" style="display:none;">
+    <h2>Log In</h2>
+    <input type="email" id="login-email" placeholder="Email">
+    <input type="password" id="login-password" placeholder="Password">
+    <button onclick="loginUser()">Log In</button>
+    <p class="switch" onclick="toggleForms()">Don't have an account? Sign up</p>
+  </div>
+
   <script type="module" src="/js/auth.js"></script>
-
-  <!-- TOGGLE SCRIPT -->
+  <script type="module" src="/js/login.js"></script>
   <script>
-    const signupForm = document.getElementById("signupForm");
-    const loginForm = document.getElementById("loginForm");
-    const toggleText = document.getElementById("toggleText");
-    const formTitle = document.getElementById("formTitle");
-
-    let isSignup = true;
-
-    toggleText.onclick = () => {
-      isSignup = !isSignup;
-
-      signupForm.classList.toggle("hidden");
-      loginForm.classList.toggle("hidden");
-
-      formTitle.textContent = isSignup ? "Sign Up" : "Log In";
-      toggleText.innerHTML = isSignup
-        ? 'Already have an account? <span>Log in</span>'
-        : 'Don’t have an account? <span>Sign up</span>';
-    };
+    function toggleForms() {
+      document.getElementById("signup-container").style.display =
+        document.getElementById("signup-container").style.display === "none" ? "block" : "none";
+      document.getElementById("login-container").style.display =
+        document.getElementById("login-container").style.display === "none" ? "block" : "none";
+    }
   </script>
-
 </body>
 </html>
