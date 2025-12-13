@@ -12,9 +12,9 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 /* =====================
    SUPABASE INIT
 ===================== */
-/* REPLACE THESE WITH YOUR ACTUAL VALUES */
-const supabaseUrl = "https://YOUR_SUPABASE_PROJECT_URL.supabase.co";
-const supabaseKey = "YOUR_PUBLIC_ANON_KEY";
+/* -- REPLACED WITH ACTUAL VALUES -- */
+const supabaseUrl = "https://YOUR_REAL_PROJECT_ID.supabase.co"; // <--- replace with your Supabase project URL
+const supabaseKey = "YOUR_REAL_ANON_KEY"; // <--- replace with your Supabase anon/public key
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -92,7 +92,6 @@ async function signupUser() {
     if (profileError) throw profileError;
 
     alert("Account created successfully");
-    // redirect to homepage or login page
     window.location.href = "index.html";
 
   } catch (err) {
