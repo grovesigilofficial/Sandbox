@@ -1,3 +1,4 @@
+// js/auth.js
 /* =========================================================
    FILE: /js/auth.js
    PURPOSE: Instagram-style multi-step signup logic
@@ -7,14 +8,7 @@
    - This file is loaded in login.html
 ========================================================= */
 
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-/* =====================
-   SUPABASE INIT
-===================== */
-const supabaseUrl = "https://YOUR_SUPABASE_PROJECT_URL.supabase.co"; // placeholder
-const supabaseKey = "YOUR_PUBLIC_ANON_KEY"; // placeholder
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabase } from "./supabaseClient.js";
 
 /* =====================
    SIGNUP HANDLER
