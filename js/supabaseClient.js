@@ -1,4 +1,4 @@
-// supabaseClient.js
+// js/supabaseClient.js
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 // Supabase client initialized from Vercel environment variables
