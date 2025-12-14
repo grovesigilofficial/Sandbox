@@ -1,3 +1,4 @@
+// js/login.js
 /* =========================================================
    FILE: /js/login.js
    PURPOSE: Login logic using Supabase
@@ -6,11 +7,7 @@
    - This file is loaded in login.html
 ========================================================= */
 
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-const supabaseUrl = "https://YOUR_SUPABASE_PROJECT_URL.supabase.co"; // placeholder
-const supabaseKey = "YOUR_PUBLIC_ANON_KEY"; // placeholder
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabase } from "./supabaseClient.js";
 
 async function loginUser() {
   const email = document.getElementById("login-email")?.value.trim();
