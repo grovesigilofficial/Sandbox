@@ -30,7 +30,9 @@ async function signupUser() {
       .from("profiles")
       .select("id")
       .eq("email", email)
-      .maybeSingle();
+      .limit(1)
+      .single()
+      .catch(() => null); // Returns null if no row
 
     if (emailExists) {
       alert("Email already in use");
@@ -41,7 +43,9 @@ async function signupUser() {
       .from("profiles")
       .select("id")
       .eq("username", username)
-      .maybeSingle();
+      .limit(1)
+      .single()
+      .catch(() => null); // Returns null if no row
 
     if (usernameExists) {
       alert("Username already taken");
