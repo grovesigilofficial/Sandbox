@@ -1,12 +1,4 @@
 // js/login.js
-/* =========================================================
-   FILE: /js/login.js
-   PURPOSE: Login logic using Supabase
-   REQUIREMENTS:
-   - Supabase project connected
-   - This file is loaded in login.html
-========================================================= */
-
 import { supabase } from "./supabaseClient.js";
 
 async function loginUser() {
@@ -15,21 +7,26 @@ async function loginUser() {
 
   if (!email || !password) {
     alert("Please enter both email and password");
+    console.log("Missing email or password", { email, password });
     return;
   }
 
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password
-  });
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    console.log("Login response:", data, error);
 
-  if (error) {
-    alert(error.message);
-    return;
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    alert("Login successful!");
+    window.location.href = "index.html";
+
+  } catch (err) {
+    console.error("Login error:", err);
+    alert(err.message || "Something went wrong");
   }
-
-  alert("Login successful");
-  window.location.href = "index.html";
 }
 
 window.loginUser = loginUser;
