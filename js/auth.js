@@ -1,13 +1,4 @@
 // js/auth.js
-/* =========================================================
-   FILE: /js/auth.js
-   PURPOSE: Instagram-style multi-step signup logic
-   REQUIREMENTS:
-   - Supabase project connected
-   - profiles table exists
-   - This file is loaded in login.html
-========================================================= */
-
 import { supabase } from "./supabaseClient.js";
 
 /* =====================
@@ -22,60 +13,56 @@ async function signupUser() {
 
   if (!email || !password || !username || !fullName || !dob) {
     alert("All fields are required");
+    console.log("Missing field(s):", { email, password, username, fullName, dob });
     return;
   }
 
   try {
+    // Debug: check table before insert
+    const { data: tableData, error: tableErr } = await supabase.from("profiles").select("*");
+    console.log("Current profiles table:", tableData, tableErr);
+
+    // Check email/username conflicts
     const { data: emailExists } = await supabase
       .from("profiles")
       .select("id")
       .eq("email", email)
-      .limit(1)
-      .single()
-      .catch(() => null); // Returns null if no row
-
-    if (emailExists) {
-      alert("Email already in use");
-      return;
-    }
+      .maybeSingle();
+    console.log("Email exists:", emailExists);
 
     const { data: usernameExists } = await supabase
       .from("profiles")
       .select("id")
       .eq("username", username)
-      .limit(1)
-      .single()
-      .catch(() => null); // Returns null if no row
+      .maybeSingle();
+    console.log("Username exists:", usernameExists);
 
-    if (usernameExists) {
-      alert("Username already taken");
-      return;
-    }
+    if (emailExists) { alert("Email already in use"); return; }
+    if (usernameExists) { alert("Username already taken"); return; }
 
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
+    // Sign up user
+    const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
+    console.log("Auth response:", authData, authError);
     if (authError) throw authError;
-    const userId = authData.user.id;
 
-    const { error: profileError } = await supabase
+    // Insert profile
+    const { error: profileError, data: profileData } = await supabase
       .from("profiles")
       .insert({
-        id: userId,
+        id: authData.user.id,
         email,
         username,
         full_name: fullName,
         dob,
       });
-
+    console.log("Profile insert response:", profileData, profileError);
     if (profileError) throw profileError;
 
-    alert("Account created successfully");
+    alert("Account created successfully!");
     window.location.href = "index.html";
 
   } catch (err) {
+    console.error("Signup error:", err);
     alert(err.message || "Something went wrong");
   }
 }
