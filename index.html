@@ -55,7 +55,6 @@
 
     button:hover { background: var(--text); color: var(--bg); }
 
-    /* Floating login button */
     #loginBtn {
       position: fixed;
       top: 20px;
@@ -106,7 +105,6 @@
     }
 
     .close:hover { color: #ff7777; }
-
   </style>
 </head>
 <body>
@@ -156,7 +154,7 @@ Not peaceful.
 Not enlightened.  
 Just quiet in a way I had never felt before.  
 
-And in that silence, something inside me dissolved.  
+In that silence, something inside me dissolved.  
 My boundaries.  
 My name.  
 My story.  
@@ -198,7 +196,14 @@ A story of a mind pushed open by chemicals, pain, and stillness… and a person 
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+    const supabase = createClient(
+      "https://ylpsaftvxkedeujuclpp.supabase.co",
+      "sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp"
+    );
+
     // Story Modal
     const modal = document.getElementById("storyModal");
     const btn = document.getElementById("openStory");
