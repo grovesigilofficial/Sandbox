@@ -1,23 +1,25 @@
-<!-- =========================================================
-     FILE: /login.html
-     PURPOSE: Instagram-style login / signup page
-     REQUIREMENTS:
-     - /js/auth.js exists and connected to Supabase
-     - /js/login.js will handle login logic
-========================================================= -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GroveSigilOfficial Login</title>
+
+  <!-- ✅ Supabase runtime config (REQUIRED) -->
+  <script>
+    window.__SUPABASE_URL__ = "https://ylpsaftvxkedeujuclpp.supabase.co";
+    window.__SUPABASE_ANON_KEY__ = "sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp";
+  </script>
+
   <style>
     :root {
       --bg: #000;
       --text: #ff3a3a;
       --glow: 0 0 18px rgba(255, 0, 40, 0.6);
     }
+
     * { box-sizing:border-box; margin:0; padding:0; }
+
     body {
       background: var(--bg);
       color: var(--text);
@@ -27,6 +29,7 @@
       align-items: center;
       height: 100vh;
     }
+
     .container {
       background: #111;
       padding: 32px;
@@ -37,6 +40,7 @@
       text-align: center;
       box-shadow: 0 0 20px rgba(255,0,40,0.3);
     }
+
     input {
       width: 100%;
       padding: 12px;
@@ -46,6 +50,7 @@
       background: #000;
       color: var(--text);
     }
+
     button {
       width: 100%;
       padding: 12px;
@@ -57,10 +62,17 @@
       font-size: 1rem;
       cursor: pointer;
     }
+
     button:hover { opacity: 0.9; }
-    .switch { font-size: 0.9rem; cursor: pointer; color: #ff7777; }
+
+    .switch {
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: #ff7777;
+    }
   </style>
 </head>
+
 <body>
   <div class="container" id="signup-container">
     <h2>Sign Up</h2>
@@ -68,7 +80,7 @@
     <input type="password" id="password" placeholder="Password">
     <input type="text" id="username" placeholder="Username">
     <input type="text" id="full-name" placeholder="Full Name">
-    <input type="date" id="dob" placeholder="Date of Birth">
+    <input type="date" id="dob">
     <button onclick="signupUser()">Sign Up</button>
     <p class="switch" onclick="toggleForms()">Already have an account? Log in</p>
   </div>
@@ -83,10 +95,12 @@
 
   <script type="module" src="/js/auth.js"></script>
   <script type="module" src="/js/login.js"></script>
+
   <script>
     function toggleForms() {
       document.getElementById("signup-container").style.display =
         document.getElementById("signup-container").style.display === "none" ? "block" : "none";
+
       document.getElementById("login-container").style.display =
         document.getElementById("login-container").style.display === "none" ? "block" : "none";
     }
