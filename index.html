@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -197,12 +198,7 @@ A story of a mind pushed open by chemicals, pain, and stillness… and a person 
   </div>
 
   <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-    const supabase = createClient(
-      "https://ylpsaftvxkedeujuclpp.supabase.co",
-      "sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp"
-    );
+    import { supabase } from "/js/supabaseClient.js";
 
     // Story Modal
     const modal = document.getElementById("storyModal");
