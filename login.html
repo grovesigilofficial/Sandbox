@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GroveSigilOfficial Login</title>
 
-  <!-- ✅ Supabase runtime config (REQUIRED) -->
+  <!-- Supabase runtime config -->
   <script>
     window.__SUPABASE_URL__ = "https://ylpsaftvxkedeujuclpp.supabase.co";
     window.__SUPABASE_ANON_KEY__ = "sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp";
@@ -72,7 +73,6 @@
     }
   </style>
 </head>
-
 <body>
   <div class="container" id="signup-container">
     <h2>Sign Up</h2>
@@ -93,6 +93,7 @@
     <p class="switch" onclick="toggleForms()">Don't have an account? Sign up</p>
   </div>
 
+  <script type="module" src="/js/supabaseClient.js"></script>
   <script type="module" src="/js/auth.js"></script>
   <script type="module" src="/js/login.js"></script>
 
