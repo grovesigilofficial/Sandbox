@@ -1,8 +1,8 @@
 // js/supabaseClient.js
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-// Supabase client initialized from Vercel environment variables
+// Use the keys you already set in login.html or index.html
 export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  window.__SUPABASE_URL__,
+  window.__SUPABASE_ANON_KEY__
 );
