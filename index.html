@@ -1,126 +1,92 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GroveSigilOfficial</title>
-  <style>
-    :root {
-      --bg: #000;
-      --text: #ff3a3a;
-      --glow: 0 0 18px rgba(255, 0, 40, 0.6);
-      --modal-bg: rgba(0, 0, 0, 0.95);
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GroveSigilOfficial</title>
 
-    * { box-sizing: border-box; margin:0; padding:0; }
-
-    body {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: var(--bg);
-      font-family: "Oswald", system-ui, sans-serif;
-      color: var(--text);
-      overflow: hidden;
-    }
-
-    h1 {
-      font-size: clamp(32px, 8vw, 90px);
-      letter-spacing: 0.12em;
-      text-align: center;
-      text-shadow: var(--glow);
-      animation: pulse 3.6s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%   { opacity: 0.7; transform: scale(0.98); }
-      50%  { opacity: 1;   transform: scale(1.02); }
-      100% { opacity: 0.7; transform: scale(0.98); }
-    }
-
-    button {
-      margin-top: 40px;
-      padding: 12px 24px;
-      font-size: 1rem;
-      letter-spacing: 0.08em;
-      background: transparent;
-      color: var(--text);
-      border: 2px solid var(--text);
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    button:hover { background: var(--text); color: var(--bg); }
-
-    #loginBtn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 20;
-      padding: 10px 16px;
-      font-size: 0.9rem;
-      border-radius: 8px;
-      background: var(--text);
-      color: var(--bg);
-      border: none;
-    }
-
-    #loginBtn:hover { opacity: 0.9; }
-
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 10;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: var(--modal-bg);
-      overflow-y: auto;
-      padding: 60px 20px;
-    }
-
-    .modal-content {
-      background-color: #111;
-      margin: auto;
-      padding: 20px;
-      border: 2px solid var(--text);
-      border-radius: 12px;
-      max-width: 800px;
-      color: var(--text);
-      line-height: 1.6;
-      white-space: pre-wrap;
-      text-shadow: var(--glow);
-    }
-
-    .close {
-      color: var(--text);
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .close:hover { color: #ff7777; }
-  </style>
+<style>
+:root {
+  --bg:#000;
+  --text:#ff3a3a;
+  --glow:0 0 18px rgba(255,0,40,.6);
+  --modal-bg:rgba(0,0,0,.95);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:var(--bg);
+font-family:Oswald,system-ui,sans-serif;
+color:var(--text);
+overflow:hidden;
+}
+h1{
+font-size:clamp(32px,8vw,90px);
+letter-spacing:.12em;
+text-shadow:var(--glow);
+animation:pulse 3.6s ease-in-out infinite;
+}
+@keyframes pulse{
+0%{opacity:.7;transform:scale(.98)}
+50%{opacity:1;transform:scale(1.02)}
+100%{opacity:.7;transform:scale(.98)}
+}
+button{
+margin-top:40px;
+padding:12px 24px;
+border:2px solid var(--text);
+background:transparent;
+color:var(--text);
+border-radius:8px;
+cursor:pointer;
+}
+button:hover{background:var(--text);color:#000}
+#loginBtn{
+position:fixed;
+top:20px;
+right:20px;
+background:var(--text);
+color:#000;
+border:none;
+}
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:var(--modal-bg);
+padding:60px 20px;
+overflow-y:auto;
+}
+.modal-content{
+background:#111;
+border:2px solid var(--text);
+border-radius:12px;
+max-width:800px;
+margin:auto;
+padding:20px;
+white-space:pre-wrap;
+line-height:1.6;
+}
+.close{
+float:right;
+font-size:28px;
+cursor:pointer;
+}
+</style>
 </head>
+
 <body>
-  <h1>GroveSigilOfficial</h1>
+<h1>GroveSigilOfficial</h1>
+<button id="openStory">How My Spiritual Awakening Started</button>
+<button id="loginBtn">Login / Sign Up</button>
 
-  <!-- Story modal button -->
-  <button id="openStory">How My Spiritual Awakening Started</button>
-
-  <!-- Floating Login/Signup button -->
-  <button id="loginBtn">Login / Sign Up</button>
-
-  <!-- Story Modal -->
-  <div id="storyModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
+<div id="storyModal" class="modal">
+<div class="modal-content">
+<span class="close">&times;</span>
 
 ★ MY AWAKENING ★
 
@@ -147,7 +113,7 @@ Hard.
 Sudden.  
 Like someone knocked the last support beam out from under me.  
 
-That night, I cried until something broke loose in my chest. Not a spiritual ritual—just pain finally spilling over. But after the crying stopped, I sat down cross‑legged on the floor of my home studio… and something unexpected happened:
+That night, I cried until something broke loose in my chest. Not a spiritual ritual—just pain finally spilling over. But after the crying stopped, I sat down cross-legged on the floor of my home studio… and something unexpected happened:
 
 My mind went quiet.  
 
@@ -194,23 +160,15 @@ Unprepared.
 But real in the way it changed me forever.  
 
 A story of a mind pushed open by chemicals, pain, and stillness… and a person who didn’t yet know the language for what they lived.
-    </div>
-  </div>
+</div>
+</div>
 
-  <script type="module">
-    import { supabase } from "/js/supabaseClient.js";
-
-    // Story Modal
-    const modal = document.getElementById("storyModal");
-    const btn = document.getElementById("openStory");
-    const span = document.getElementsByClassName("close")[0];
-    btn.onclick = () => modal.style.display = "block";
-    span.onclick = () => modal.style.display = "none";
-    window.onclick = (event) => { if (event.target === modal) modal.style.display = "none"; };
-
-    // Floating Login / Signup button
-    const loginBtn = document.getElementById("loginBtn");
-    loginBtn.onclick = () => { window.location.href = "login.html"; };
-  </script>
+<script>
+const modal=document.getElementById("storyModal");
+document.getElementById("openStory").onclick=()=>modal.style.display="block";
+document.querySelector(".close").onclick=()=>modal.style.display="none";
+window.onclick=e=>{if(e.target===modal)modal.style.display="none";}
+document.getElementById("loginBtn").onclick=()=>location.href="login.html";
+</script>
 </body>
 </html>
