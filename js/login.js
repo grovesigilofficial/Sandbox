@@ -1,4 +1,3 @@
-// js/login.js
 import { supabase } from "./supabaseClient.js";
 
 async function loginUser() {
@@ -6,27 +5,24 @@ async function loginUser() {
   const password = document.getElementById("login-password")?.value;
 
   if (!email || !password) {
-    alert("Please enter both email and password");
-    console.log("Missing email or password", { email, password });
+    alert("Missing email or password");
     return;
   }
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    console.log("Login response:", data, error);
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
 
-    if (error) {
-      alert(error.message);
-      return;
-    }
+    if (error) throw error;
 
-    alert("Login successful!");
+    alert("Login successful");
     window.location.href = "index.html";
-
   } catch (err) {
-    console.error("Login error:", err);
-    alert(err.message || "Something went wrong");
+    alert(err.message);
   }
 }
 
 window.loginUser = loginUser;
+
