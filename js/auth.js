@@ -13,9 +13,7 @@ async function signupUser() {
   }
 
   try {
-    const { data: authData, error: authError } =
-      await supabase.auth.signUp({ email, password });
-
+    const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
     if (authError) throw authError;
 
     const { error: profileError } = await supabase
@@ -25,17 +23,16 @@ async function signupUser() {
         email,
         username,
         full_name: fullName,
-        dob
+        dob,
       });
-
     if (profileError) throw profileError;
 
-    alert("Account created");
+    alert("Account created! Check your email to confirm.");
     window.location.href = "index.html";
   } catch (err) {
-    alert(err.message);
+    console.error("Signup error:", err);
+    alert(err.message || "Signup failed");
   }
 }
 
 window.signupUser = signupUser;
-
