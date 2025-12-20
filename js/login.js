@@ -5,24 +5,20 @@ async function loginUser() {
   const password = document.getElementById("login-password")?.value;
 
   if (!email || !password) {
-    alert("Missing email or password");
+    alert("Please enter both email and password");
     return;
   }
 
   try {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
 
-    alert("Login successful");
+    alert("Login successful!");
     window.location.href = "index.html";
   } catch (err) {
-    alert(err.message);
+    console.error("Login error:", err);
+    alert(err.message || "Login failed");
   }
 }
 
 window.loginUser = loginUser;
-
