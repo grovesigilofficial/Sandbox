@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+  <h1>Dashboard</h1>
+  <p id="user-email">Checking session...</p>
+  <button id="logout-btn">Log out</button>
+
+  <script type="module">
+    import { supabase } from "./js/supabaseClient.js";
+
+    // Check session on page load
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      // Not logged in → kick them out
+      window.location.href = "login.html";
+    } else {
+      // Logged in → show email
+      document.getElementById("user-email").textContent =
+        "Logged in as: " + user.email;
+    }
+
+    // Logout handler
+    document.getElementById("logout-btn").addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>
