@@ -1,3 +1,4 @@
+// js/login.js
 import { supabase } from "./supabaseClient.js";
 
 async function loginUser() {
@@ -10,11 +11,15 @@ async function loginUser() {
   }
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
     if (error) throw error;
 
-    alert("Login successful!");
-    window.location.href = "index.html";
+    // redirect AFTER successful login
+    window.location.href = "dashboard.html";
   } catch (err) {
     console.error("Login error:", err);
     alert(err.message || "Login failed");
