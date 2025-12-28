@@ -1,37 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard</title>
+
+<!-- Supabase runtime config -->
+<script>
+  window.__SUPABASE_URL__ = "https://ylpsaftvxkedeujuclpp.supabase.co";
+  window.__SUPABASE_ANON_KEY__ = "sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp";
+</script>
+
+<style>
+  body {
+    margin: 0;
+    background: #000;
+    color: #ff3a3a;
+    font-family: Oswald, system-ui, sans-serif;
+    min-height: 100vh;
+  }
+
+  .wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .card {
+    background: #111;
+    border: 2px solid #ff3a3a;
+    border-radius: 14px;
+    padding: 32px;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(255, 0, 40, 0.35);
+  }
+
+  h1 {
+    margin-bottom: 12px;
+  }
+
+  p {
+    opacity: 0.85;
+    margin-bottom: 24px;
+  }
+
+  button {
+    background: #ff3a3a;
+    color: #000;
+    border: none;
+    padding: 12px 18px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  button:hover {
+    opacity: 0.9;
+  }
+</style>
 </head>
+
 <body>
-  <h1>Dashboard</h1>
-  <p id="user-email">Checking session...</p>
-  <button id="logout-btn">Log out</button>
+<div class="wrapper">
+  <div class="card">
+    <h1>Dashboard</h1>
+    <p id="user-email">Checking session…</p>
+    <button onclick="logout()">Log Out</button>
+  </div>
+</div>
 
-  <script type="module">
-    import { supabase } from "./js/supabaseClient.js";
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-    // Check session on page load
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+  const supabase = createClient(
+    window.__SUPABASE_URL__,
+    window.__SUPABASE_ANON_KEY__
+  );
 
-    if (!user) {
-      // Not logged in → kick them out
+  async function loadSession() {
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) {
       window.location.href = "login.html";
-    } else {
-      // Logged in → show email
-      document.getElementById("user-email").textContent =
-        "Logged in as: " + user.email;
+      return;
     }
 
-    // Logout handler
-    document.getElementById("logout-btn").addEventListener("click", async () => {
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    });
-  </script>
+    document.getElementById("user-email").textContent =
+      "Logged in as " + session.user.email;
+  }
+
+  async function logout() {
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  window.logout = logout;
+  loadSession();
+</script>
 </body>
-</html>
+  </html>
