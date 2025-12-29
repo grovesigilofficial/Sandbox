@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard</title>
+<title>Grove Dashboard</title>
 
 <script>
-window.__SUPABASE_URL__="https://ylpsaftvxkedeujuclpp.supabase.co";
-window.__SUPABASE_ANON_KEY__="sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp";
+window.__SUPABASE_URL__ = "https://ylpsaftvxkedeujuclpp.supabase.co";
+window.__SUPABASE_ANON_KEY__ = "sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp";
 </script>
 
 <style>
@@ -24,11 +24,13 @@ body {
 
 .card {
   background: #0b0b0b;
-  border: 1px solid #220000;
+  border: 2px solid #220000;
   padding: 32px;
   width: 100%;
   max-width: 420px;
   box-shadow: 0 0 40px rgba(255,0,0,0.15);
+  text-align: center;
+  border-radius: 12px;
 }
 
 h1 {
@@ -41,6 +43,10 @@ h1 {
   margin-bottom: 24px;
 }
 
+.meta div {
+  margin: 4px 0;
+}
+
 button {
   width: 100%;
   padding: 12px;
@@ -49,6 +55,7 @@ button {
   border: none;
   font-weight: bold;
   cursor: pointer;
+  border-radius: 8px;
 }
 
 button:hover {
@@ -60,8 +67,11 @@ button:hover {
 <body>
   <div class="card">
     <h1 id="username">Loading…</h1>
-    <div class="meta" id="email"></div>
-    <button onclick="logout()">Log Out</button>
+    <div class="meta">
+      <div id="email">Loading…</div>
+      <div>Joined: <span id="joined">Loading…</span></div>
+    </div>
+    <button id="logout-btn">Log Out</button>
   </div>
 
 <script type="module" src="/js/dashboard.js"></script>
