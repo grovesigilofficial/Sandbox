@@ -1,122 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
 
-  <!-- Supabase runtime config -->
-  <script>
-    window.__SUPABASE_URL__ = "https://ylpsaftvxkedeujuclpp.supabase.co";
-    window.__SUPABASE_ANON_KEY__ = "sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp";
-  </script>
+<script>
+window.__SUPABASE_URL__ = "https://ylpsaftvxkedeujuclpp.supabase.co";
+window.__SUPABASE_ANON_KEY__ = "sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp";
+</script>
 
-  <style>
-    :root {
-      --bg: #000;
-      --text: #ff3a3a;
-      --panel: #111;
-      --glow: 0 0 18px rgba(255, 0, 40, 0.6);
-    }
+<style>
+body {
+  margin: 0;
+  background: #000;
+  color: #ff3a3a;
+  font-family: Oswald, system-ui;
+}
 
-    * { box-sizing: border-box; }
+.wrapper {
+  padding: 32px;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
-      font-family: "Oswald", system-ui, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+.card {
+  border: 2px solid #ff3a3a;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 600px;
+  box-shadow: 0 0 20px rgba(255,0,40,.3);
+}
 
-    .dashboard {
-      width: 100%;
-      max-width: 900px;
-      background: var(--panel);
-      border: 2px solid var(--text);
-      border-radius: 14px;
-      padding: 32px;
-      box-shadow: var(--glow);
-    }
+h1 {
+  margin-top: 0;
+}
 
-    h1 {
-      margin-top: 0;
-      text-align: center;
-      letter-spacing: 0.12em;
-      text-shadow: var(--glow);
-    }
+.label {
+  opacity: .7;
+  font-size: .9rem;
+}
 
-    .user-info {
-      margin-top: 24px;
-      font-size: 1.1rem;
-      text-align: center;
-    }
+.value {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+}
 
-    .actions {
-      margin-top: 40px;
-      display: flex;
-      justify-content: center;
-    }
-
-    button {
-      padding: 12px 28px;
-      font-size: 1rem;
-      background: transparent;
-      color: var(--text);
-      border: 2px solid var(--text);
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    button:hover {
-      background: var(--text);
-      color: var(--bg);
-    }
-  </style>
+button {
+  padding: 10px 16px;
+  background: #ff3a3a;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+</style>
 </head>
 
 <body>
-  <div class="dashboard">
-    <h1>DASHBOARD</h1>
+<div class="wrapper">
+  <h1>Dashboard</h1>
 
-    <div class="user-info" id="user-info">
-      Checking session…
-    </div>
+  <div class="card">
+    <div class="label">Username</div>
+    <div class="value" id="username">Loading…</div>
 
-    <div class="actions">
-      <button id="logoutBtn">Log Out</button>
-    </div>
+    <div class="label">Email</div>
+    <div class="value" id="email">Loading…</div>
+
+    <div class="label">Joined</div>
+    <div class="value" id="created">Loading…</div>
+
+    <button id="logout">Log Out</button>
   </div>
+</div>
 
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-    const supabase = createClient(
-      window.__SUPABASE_URL__,
-      window.__SUPABASE_ANON_KEY__
-    );
-
-    // SESSION CHECK
-    const { data: { session } } = await supabase.auth.getSession();
-
-    if (!session) {
-      // Not logged in → back to login
-      window.location.href = "login.html";
-    } else {
-      // Logged in → show email
-      document.getElementById("user-info").textContent =
-        "Logged in as " + session.user.email;
-    }
-
-    // LOGOUT
-    document.getElementById("logoutBtn").onclick = async () => {
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    };
-  </script>
+<script type="module" src="/js/dashboard-data.js"></script>
 </body>
-    </html>
+      </html>
