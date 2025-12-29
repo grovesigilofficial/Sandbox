@@ -1,3 +1,4 @@
+// js/auth.js
 import { supabase } from "./supabaseClient.js";
 
 async function signupUser() {
@@ -13,9 +14,20 @@ async function signupUser() {
   }
 
   try {
-    const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
+    // Sign up user AND set user_metadata to include full_name (this populates Display Name in Supabase Users)
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+          username: username
+        }
+      }
+    });
     if (authError) throw authError;
 
+    // Insert into profiles table (same as before)
     const { error: profileError } = await supabase
       .from("profiles")
       .insert({
