@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grove Dashboard</title>
+<title>Dashboard</title>
 
 <script>
-window.__SUPABASE_URL__ = "https://ylpsaftvxkedeujuclpp.supabase.co";
-window.__SUPABASE_ANON_KEY__ = "sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp";
+  window.__SUPABASE_URL__ = "https://ylpsaftvxkedeujuclpp.supabase.co";
+  window.__SUPABASE_ANON_KEY__ = "sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp";
 </script>
 
 <style>
@@ -15,64 +15,60 @@ body {
   background: #000;
   color: #ff3a3a;
   font-family: Oswald, system-ui;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
   margin: 0;
+  padding: 0;
 }
-
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 32px;
+}
 .card {
   background: #0b0b0b;
-  border: 2px solid #220000;
-  padding: 32px;
-  width: 100%;
-  max-width: 420px;
+  border: 1px solid #220000;
+  padding: 24px;
+  margin-bottom: 16px;
   box-shadow: 0 0 40px rgba(255,0,0,0.15);
-  text-align: center;
-  border-radius: 12px;
 }
-
-h1 {
+h1, h2 {
   margin: 0 0 8px;
-  font-size: 32px;
 }
-
 .meta {
   opacity: 0.8;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
-
-.meta div {
-  margin: 4px 0;
-}
-
 button {
-  width: 100%;
   padding: 12px;
   background: #ff3a3a;
   color: #000;
   border: none;
   font-weight: bold;
   cursor: pointer;
-  border-radius: 8px;
 }
-
-button:hover {
-  background: #ff5c5c;
-}
+button:hover { background: #ff5c5c; }
+#newsfeed { margin-top: 32px; }
 </style>
 </head>
 
 <body>
+<div class="container">
   <div class="card">
     <h1 id="username">Loading…</h1>
-    <div class="meta">
-      <div id="email">Loading…</div>
-      <div>Joined: <span id="joined">Loading…</span></div>
-    </div>
-    <button id="logout-btn">Log Out</button>
+    <div class="meta" id="email"></div>
+    <button onclick="logout()">Log Out</button>
   </div>
+
+  <div class="card">
+    <h2>Create Post</h2>
+    <textarea id="post-content" placeholder="Share something..." rows="3" style="width:100%;padding:12px;"></textarea>
+    <button onclick="createPost()">Post</button>
+  </div>
+
+  <div id="newsfeed">
+    <h2>Newsfeed</h2>
+    <div id="posts"></div>
+  </div>
+</div>
 
 <script type="module" src="/js/dashboard.js"></script>
 </body>
