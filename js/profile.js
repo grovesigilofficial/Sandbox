@@ -1,35 +1,62 @@
 import { supabase } from "./supabaseClient.js";
 
-async function loadProfile() {
-  const user = supabase.auth.getUser();
-  const { data: { user: currentUser } } = await user;
+const usernameInput = document.getElementById("username");
+const fullNameInput = document.getElementById("full-name");
+const emailInput = document.getElementById("email");
+const dobInput = document.getElementById("dob");
 
-  if (!currentUser) {
+async function loadProfile() {
+  const user = supabase.auth.user();
+  if (!user) {
+    alert("Not logged in");
     window.location.href = "index.html";
     return;
   }
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("*")
-    .eq("id", currentUser.id)
+    .select("username, full_name, email, dob")
+    .eq("id", user.id)
     .single();
 
   if (error) {
-    console.error("Profile fetch error:", error);
-    return;
+    console.error("Error loading profile:", error);
+    return alert("Failed to load profile");
   }
 
-  document.getElementById("username").innerText = data.username;
-  document.getElementById("fullName").innerText = data.full_name;
-  document.getElementById("email").innerText = data.email;
-  document.getElementById("dob").innerText = data.dob;
-  document.getElementById("joined").innerText = `Joined: ${new Date(data.created_at).toDateString()}`;
+  usernameInput.value = data.username || "";
+  fullNameInput.value = data.full_name || "";
+  emailInput.value = data.email || "";
+  dobInput.value = data.dob || "";
 }
 
-function logout() {
-  supabase.auth.signOut().then(() => window.location.href = "index.html");
+async function updateProfile() {
+  const user = supabase.auth.user();
+  if (!user) return alert("Not logged in");
+
+  const updates = {
+    username: usernameInput.value.trim(),
+    full_name: fullNameInput.value.trim(),
+    dob: dobInput.value
+  };
+
+  const { error } = await supabase
+    .from("profiles")
+    .update(updates)
+    .eq("id", user.id);
+
+  if (error) {
+    console.error("Error updating profile:", error);
+    return alert("Failed to update profile");
+  }
+
+  alert("Profile updated successfully!");
 }
 
+async function logout() {
+  await supabase.auth.signOut();
+  window.location.href = "index.html";
+}
+
+// Load profile on page load
 loadProfile();
-window.logout = logout;
