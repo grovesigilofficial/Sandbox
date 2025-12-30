@@ -11,30 +11,30 @@ async function loginUser() {
   }
 
   try {
-    // Sign in with email/password
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-    // Fetch the full profile for dashboard display
-    const { data: profileData, error: profileError } = await supabase
-      .from("profiles")
-      .select("username, full_name")
-      .eq("id", data.user.id)
-      .maybeSingle();
+    // If Supabase returns an error
+    if (error) {
+      // If user exists but hasn't confirmed email yet
+      if (error.message.includes("email not confirmed")) {
+        alert("Please check your email to confirm your account before logging in.");
+        return;
+      }
+      // Any other error
+      throw error;
+    }
 
-    if (profileError) throw profileError;
-
-    alert(
-      `Login successful! Welcome back, ${profileData.full_name || profileData.username || "user"} ✅`
-    );
-
-    // Redirect to dashboard after login
+    // If login successful
+    alert(`Login successful! Welcome back, ${data.user.user_metadata?.full_name || "User"}!`);
     window.location.href = "dashboard.html";
+
   } catch (err) {
     console.error("Login error:", err);
-    alert(
-      err.message || "Login failed. Make sure your email is confirmed."
-    );
+    // Friendly message for all failed attempts
+    alert("Login failed. If you just signed up, please check your email to confirm your account.");
   }
 }
 
