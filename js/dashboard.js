@@ -1,83 +1,69 @@
-import { supabase } from "./supabaseClient.js";
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-// Check session and load user info
-async function checkSession() {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) {
-    window.location.href = "index.html";
+const supabase = createClient(
+  window.__SUPABASE_URL__,
+  window.__SUPABASE_ANON_KEY__
+);
+
+// Load user profile on dashboard
+async function loadDashboard() {
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    window.location.href = "index.html"; // redirect if not logged in
     return;
   }
 
-  const userId = session.user.id;
-
-  // Fetch profile info
   const { data: profile, error } = await supabase
     .from("profiles")
-    .select("*")
-    .eq("id", userId)
+    .select("username, full_name, email")
+    .eq("id", user.id)
     .single();
 
   if (error) {
-    console.error("Profile fetch error:", error);
+    console.error("Error loading profile:", error);
     return;
   }
 
-  document.getElementById("username").textContent = profile.username || "Unknown";
-  document.getElementById("email").textContent = profile.email || "No Email";
-  document.getElementById("joined").textContent = profile.created_at
-    ? new Date(profile.created_at).toLocaleDateString()
-    : "Unknown";
+  document.getElementById("username").textContent =
+    profile.username || profile.full_name || "Unknown";
+  document.getElementById("email").textContent = profile.email;
 }
 
-window.checkSession = checkSession;
-
-// Log out
+// Logout function
 async function logout() {
-  const { error } = await supabase.auth.signOut();
-  if (error) {
-    alert("Logout failed: " + error.message);
-    return;
-  }
+  await supabase.auth.signOut();
   window.location.href = "index.html";
 }
 
-window.logout = logout;
-
-// Delete profile
+// Delete profile function
 async function deleteProfile() {
-  const confirmDelete = confirm(
-    "Are you sure you want to delete your profile? This action is irreversible."
+  const confirmed = confirm(
+    "Are you sure you want to delete your profile? This action cannot be undone."
   );
-  if (!confirmDelete) return;
+  if (!confirmed) return;
 
-  const { data: session } = await supabase.auth.getSession();
-  if (!session) return alert("No active session found.");
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return alert("No user logged in");
 
-  const userId = session.user.id;
-
-  // Delete from profiles table
-  const { error: deleteError } = await supabase
+  // Delete profile row
+  const { error: deleteProfileError } = await supabase
     .from("profiles")
     .delete()
-    .eq("id", userId);
+    .eq("id", user.id);
+  if (deleteProfileError) return alert(deleteProfileError.message);
 
-  if (deleteError) {
-    alert("Failed to delete profile: " + deleteError.message);
-    return;
-  }
+  // Delete auth user
+  const { error: deleteAuthError } = await supabase.auth.admin.deleteUser(user.id);
+  if (deleteAuthError) return alert(deleteAuthError.message);
 
-  // Delete the auth user
-  const { error: authError } = await supabase.auth.admin.deleteUser(userId);
-  if (authError) {
-    alert("Failed to delete authentication: " + authError.message);
-    return;
-  }
-
-  alert("Your profile has been deleted successfully.");
+  alert("Profile deleted successfully");
   window.location.href = "index.html";
 }
 
+// Expose functions globally
+window.logout = logout;
 window.deleteProfile = deleteProfile;
 
-// Run on page load
-checkSession();
+// Run on load
+loadDashboard();
