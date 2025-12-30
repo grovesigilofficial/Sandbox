@@ -15,10 +15,9 @@ async function loginUser() {
       email,
       password,
     });
-
     if (error) throw error;
 
-    // redirect AFTER successful login
+    // Redirect to dashboard
     window.location.href = "dashboard.html";
   } catch (err) {
     console.error("Login error:", err);
