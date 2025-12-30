@@ -1,94 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard</title>
 
 <script>
-window.__SUPABASE_URL__="https://ylpsaftvxkedeujuclpp.supabase.co";
-window.__SUPABASE_ANON_KEY__="sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp";
+window.__SUPABASE_URL__ = "https://ylpsaftvxkedeujuclpp.supabase.co";
+window.__SUPABASE_ANON_KEY__ = "sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp";
 </script>
 
 <style>
 body {
-  background:#000;
-  color:#ff3a3a;
-  font-family:Oswald,system-ui;
-  margin:0;
-  padding:0;
+  background: #000;
+  color: #ff3a3a;
+  font-family: Oswald, system-ui;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
 }
-
-.container {
-  max-width:700px;
-  margin:40px auto;
-  padding:20px;
-}
-
 .card {
-  background:#0b0b0b;
-  border:1px solid #220000;
-  padding:24px;
-  margin-bottom:20px;
+  background: #0b0b0b;
+  border: 1px solid #220000;
+  padding: 32px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 0 40px rgba(255,0,0,0.15);
 }
-
-h1 { margin:0 0 6px; }
-small { opacity:.7 }
-
-textarea {
-  width:100%;
-  min-height:80px;
-  background:#000;
-  color:#ff3a3a;
-  border:1px solid #ff3a3a;
-  padding:12px;
-  margin-top:12px;
-}
-
+h1 { margin: 0 0 8px; font-size: 32px; }
+.meta { opacity: 0.8; margin-bottom: 8px; }
 button {
-  margin-top:12px;
-  padding:10px 18px;
-  background:#ff3a3a;
-  color:#000;
-  border:none;
-  cursor:pointer;
-  font-weight:bold;
+  width: 100%;
+  padding: 12px;
+  background: #ff3a3a;
+  color: #000;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
 }
-
-.post {
-  border-top:1px solid #220000;
-  padding:16px 0;
-}
-
-.post-user { font-weight:bold; }
-.post-time { font-size:12px; opacity:.6; }
+button:hover { background: #ff5c5c; }
 </style>
 </head>
 
 <body>
-<div class="container">
-
-  <!-- USER CARD -->
-  <div class="card">
-    <h1 id="username">Loading…</h1>
-    <small id="email"></small>
-    <br/>
-    <button onclick="logout()">Log Out</button>
-  </div>
-
-  <!-- CREATE POST -->
-  <div class="card">
-    <h2>Create Post</h2>
-    <textarea id="postContent" placeholder="Say something…"></textarea>
-    <button onclick="createPost()">Post</button>
-  </div>
-
-  <!-- FEED -->
-  <div class="card">
-    <h2>Feed</h2>
-    <div id="feed">Loading posts…</div>
-  </div>
-
+<div class="card">
+  <h1 id="username">Loading…</h1>
+  <div class="meta" id="email"></div>
+  <div class="meta" id="joined"></div>
+  <button onclick="logout()">Log Out</button>
 </div>
 
 <script type="module" src="/js/dashboard.js"></script>
