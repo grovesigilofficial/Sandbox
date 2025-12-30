@@ -1,4 +1,3 @@
-// js/dashboard.js
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 const supabase = createClient(
@@ -6,37 +5,28 @@ const supabase = createClient(
   window.__SUPABASE_ANON_KEY__
 );
 
-// Load user profile safely
+// Load user profile on dashboard
 async function loadDashboard() {
   const { data: { user }, error: userError } = await supabase.auth.getUser();
-
-  if (userError || !user) {
-    console.error("No user or auth error:", userError);
-    window.location.href = "index.html";
+  if (userError) {
+    console.error("Error getting user:", userError);
     return;
   }
 
-  // Use maybeSingle() to prevent coercion errors
+  if (!user) {
+    window.location.href = "index.html"; // redirect if not logged in
+    return;
+  }
+
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("username, full_name, email")
     .eq("id", user.id)
-    .maybeSingle();
+    .single();
 
   if (profileError) {
     console.error("Error loading profile:", profileError);
     return;
-  }
-
-  if (!profile) {
-    console.warn("No profile found, creating a blank one.");
-    await supabase.from("profiles").insert({
-      id: user.id,
-      email: user.email,
-      username: user.user_metadata?.username || "",
-      full_name: user.user_metadata?.full_name || "",
-    });
-    return loadDashboard(); // reload
   }
 
   document.getElementById("username").textContent =
@@ -57,17 +47,27 @@ async function deleteProfile() {
   );
   if (!confirmed) return;
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return alert("No user logged in");
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (userError || !user) return alert("No user logged in");
 
-  await supabase.from("profiles").delete().eq("id", user.id);
-  await supabase.auth.admin.deleteUser(user.id);
+  // Delete profile row
+  const { error: deleteProfileError } = await supabase
+    .from("profiles")
+    .delete()
+    .eq("id", user.id);
+  if (deleteProfileError) return alert(deleteProfileError.message);
+
+  // Delete auth user
+  const { error: deleteAuthError } = await supabase.auth.admin.deleteUser(user.id);
+  if (deleteAuthError) return alert(deleteAuthError.message);
 
   alert("Profile deleted successfully");
   window.location.href = "index.html";
 }
 
+// Expose functions globally
 window.logout = logout;
 window.deleteProfile = deleteProfile;
 
+// Run on load
 loadDashboard();
