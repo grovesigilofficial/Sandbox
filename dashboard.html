@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard</title>
+
+<script>
+  window.__SUPABASE_URL__="https://ylpsaftvxkedeujuclpp.supabase.co";
+  window.__SUPABASE_ANON_KEY__="sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp";
+</script>
+
 <style>
 body {
   background: #000;
@@ -15,6 +21,7 @@ body {
   height: 100vh;
   margin: 0;
 }
+
 .card {
   background: #0b0b0b;
   border: 1px solid #220000;
@@ -23,29 +30,47 @@ body {
   max-width: 420px;
   box-shadow: 0 0 40px rgba(255,0,0,0.15);
 }
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+}
+
+.meta {
+  opacity: 0.8;
+  margin-bottom: 24px;
+}
+
 button {
   width: 100%;
   padding: 12px;
-  background: #990000;
-  color: #fff;
+  background: #ff3a3a;
+  color: #000;
   border: none;
   font-weight: bold;
   cursor: pointer;
   margin-top: 10px;
 }
+
 button:hover {
-  background: #ff3a3a;
+  background: #ff5c5c;
+}
+
+#delete-profile-btn {
+  background: #990000;
+  color: #fff;
 }
 </style>
 </head>
+
 <body>
-<div class="card">
-  <h1 id="username">Loading…</h1>
-  <div id="email"></div>
-  <button onclick="logout()">Log Out</button>
-  <button onclick="deleteProfile()">Delete Profile</button>
-</div>
+  <div class="card">
+    <h1 id="username">Loading…</h1>
+    <div class="meta" id="email">Loading…</div>
+    <button onclick="logout()">Log Out</button>
+    <button id="delete-profile-btn" onclick="deleteProfile()">Delete Profile</button>
+  </div>
 
 <script type="module" src="/js/dashboard.js"></script>
 </body>
-</html>
+    </html>
