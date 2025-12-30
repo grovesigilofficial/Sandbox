@@ -1,35 +1,51 @@
-<button onclick="deleteProfile()" style="margin-top:10px; background:#990000; color:#fff;">
-  Delete Profile
-</button>
-
-<script type="module">
-import { supabase } from "./supabaseClient.js";
-
-async function deleteProfile() {
-  if (!confirm("Are you sure you want to delete your profile? This cannot be undone.")) return;
-
-  try {
-    const user = supabase.auth.user();
-    if (!user) throw new Error("No user logged in");
-
-    // Delete the profile row
-    const { error: profileError } = await supabase
-      .from("profiles")
-      .delete()
-      .eq("id", user.id);
-    if (profileError) throw profileError;
-
-    // Delete the auth account
-    const { error: authError } = await supabase.auth.admin.deleteUser(user.id);
-    if (authError) throw authError;
-
-    alert("Profile deleted successfully.");
-    window.location.href = "index.html"; // redirect to signup/login page
-  } catch (err) {
-    console.error("Error deleting profile:", err);
-    alert(err.message || "Failed to delete profile");
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+<style>
+body {
+  background: #000;
+  color: #ff3a3a;
+  font-family: Oswald, system-ui;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
 }
+.card {
+  background: #0b0b0b;
+  border: 1px solid #220000;
+  padding: 32px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 0 40px rgba(255,0,0,0.15);
+}
+button {
+  width: 100%;
+  padding: 12px;
+  background: #990000;
+  color: #fff;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+button:hover {
+  background: #ff3a3a;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1 id="username">Loading…</h1>
+  <div id="email"></div>
+  <button onclick="logout()">Log Out</button>
+  <button onclick="deleteProfile()">Delete Profile</button>
+</div>
 
-window.deleteProfile = deleteProfile;
-  </script>
+<script type="module" src="/js/dashboard.js"></script>
+</body>
+</html>
