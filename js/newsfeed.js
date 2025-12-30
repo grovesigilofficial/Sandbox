@@ -5,13 +5,14 @@ const postContent = document.getElementById("post-content");
 
 async function loadPosts() {
   feedContainer.innerHTML = "Loading…";
+
   const { data, error } = await supabase
     .from("newsfeed")
     .select(`
       id,
       content,
       created_at,
-      profiles!inner(username)
+      profiles(username)
     `)
     .order("created_at", { ascending: false });
 
@@ -38,13 +39,12 @@ async function createPost() {
   const content = postContent.value.trim();
   if (!content) return alert("Post cannot be empty");
 
-  const user = supabase.auth.user();
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) return alert("Not logged in");
 
   const { error } = await supabase
     .from("newsfeed")
     .insert({ user_id: user.id, content });
-
   if (error) {
     console.error("Error creating post:", error);
     return alert("Failed to post");
@@ -59,11 +59,12 @@ async function logout() {
   window.location.href = "index.html";
 }
 
-// Load posts on page load
 loadPosts();
 
-// Optional: Realtime updates
 supabase
   .from("newsfeed")
   .on("INSERT", payload => loadPosts())
   .subscribe();
+
+window.createPost = createPost;
+window.logout = logout;
