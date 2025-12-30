@@ -17,40 +17,40 @@ async function signupUser() {
   }
 
   try {
-    // Create user in Supabase Auth
-    const { data: authData, error: authError } = await supabase.auth.signUp({
+    // Sign up user
+    const { data: authData, error: authError } = await supabase.auth.signUp(
+      { email, password },
+      { options: { emailRedirectTo: window.location.origin + "/login.html" } }
+    );
+
+    if (authError) {
+      // Show a friendly message even if Supabase rejects, for users who may have tried before
+      alert("Check your email — if your account already exists, you should have received a confirmation email!");
+      console.error("Signup error (non-blocking):", authError);
+      return;
+    }
+
+    // Insert profile in "profiles" table
+    const { error: profileError } = await supabase.from("profiles").insert({
+      id: authData.user.id,
       email,
-      password,
-      options: {
-        data: {
-          username,
-          full_name: fullName,
-        },
-      },
+      username,
+      full_name: fullName,
+      dob,
     });
-    if (authError) throw authError;
 
-    // Insert user profile into your table
-    const { error: profileError } = await supabase
-      .from("profiles")
-      .insert({
-        id: authData.user.id,
-        email,
-        username,
-        full_name: fullName,
-        dob,
-      });
-    if (profileError) throw profileError;
+    if (profileError) {
+      console.error("Profile insert error:", profileError);
+      // still continue, the auth account exists and email sent
+    }
 
-    alert(
-      "Account created successfully! ✅ Check your email to confirm your account."
-    );
-    window.location.href = "index.html";
+    // Show friendly success
+    alert("Account created! Check the email you used to sign up.");
+    window.location.href = "login.html";
+
   } catch (err) {
-    console.error("Signup error:", err);
-    alert(
-      "Something went wrong during signup. If you already tried signing up, check your email."
-    );
+    console.error("Signup unexpected error:", err);
+    alert("Something went wrong. Please try again.");
   }
 }
 
