@@ -1,74 +1,83 @@
-// js/dashboard.js
 import { supabase } from "./supabaseClient.js";
 
-// Get current user session and show profile info
-async function loadDashboard() {
-  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-  if (sessionError || !session) {
-    window.location.href = "index.html"; // redirect to login if not logged in
+// Check session and load user info
+async function checkSession() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    window.location.href = "index.html";
     return;
   }
 
   const userId = session.user.id;
 
-  try {
-    // Fetch profile info
-    const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("username, full_name, email, created_at")
-      .eq("id", userId)
-      .maybeSingle();
-    if (profileError) throw profileError;
+  // Fetch profile info
+  const { data: profile, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", userId)
+    .single();
 
-    document.getElementById("username").textContent = profile.full_name || profile.username;
-    document.getElementById("email").textContent = profile.email;
-    document.getElementById("joined").textContent = new Date(profile.created_at).toLocaleDateString();
-
-    // Fetch posts/newsfeed of followed users
-    const { data: posts, error: postsError } = await supabase
-      .from("posts")
-      .select(`
-        id,
-        content,
-        created_at,
-        profiles(full_name, username)
-      `)
-      .in("user_id", supabase.from("follows").select("followed_id").eq("follower_id", userId));
-    
-    if (postsError) throw postsError;
-
-    const feedContainer = document.getElementById("feed");
-    feedContainer.innerHTML = posts
-      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-      .map(
-        post => `
-        <div class="post">
-          <h3>${post.profiles.full_name || post.profiles.username}</h3>
-          <p>${post.content}</p>
-          <small>${new Date(post.created_at).toLocaleString()}</small>
-        </div>
-      `
-      ).join("");
-
-  } catch (err) {
-    console.error("Dashboard load error:", err);
-    alert(err.message || "Failed to load dashboard.");
+  if (error) {
+    console.error("Profile fetch error:", error);
+    return;
   }
+
+  document.getElementById("username").textContent = profile.username || "Unknown";
+  document.getElementById("email").textContent = profile.email || "No Email";
+  document.getElementById("joined").textContent = profile.created_at
+    ? new Date(profile.created_at).toLocaleDateString()
+    : "Unknown";
 }
 
-// Logout function
+window.checkSession = checkSession;
+
+// Log out
 async function logout() {
   const { error } = await supabase.auth.signOut();
   if (error) {
-    console.error("Logout error:", error);
-    alert("Logout failed.");
+    alert("Logout failed: " + error.message);
     return;
   }
   window.location.href = "index.html";
 }
 
 window.logout = logout;
-window.loadDashboard = loadDashboard;
 
-// Load dashboard on page load
-document.addEventListener("DOMContentLoaded", loadDashboard);
+// Delete profile
+async function deleteProfile() {
+  const confirmDelete = confirm(
+    "Are you sure you want to delete your profile? This action is irreversible."
+  );
+  if (!confirmDelete) return;
+
+  const { data: session } = await supabase.auth.getSession();
+  if (!session) return alert("No active session found.");
+
+  const userId = session.user.id;
+
+  // Delete from profiles table
+  const { error: deleteError } = await supabase
+    .from("profiles")
+    .delete()
+    .eq("id", userId);
+
+  if (deleteError) {
+    alert("Failed to delete profile: " + deleteError.message);
+    return;
+  }
+
+  // Delete the auth user
+  const { error: authError } = await supabase.auth.admin.deleteUser(userId);
+  if (authError) {
+    alert("Failed to delete authentication: " + authError.message);
+    return;
+  }
+
+  alert("Your profile has been deleted successfully.");
+  window.location.href = "index.html";
+}
+
+window.deleteProfile = deleteProfile;
+
+// Run on page load
+checkSession();
