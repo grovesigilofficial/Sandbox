@@ -1,9 +1,4 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-const supabase = createClient(
-  window.__SUPABASE_URL__,
-  window.__SUPABASE_ANON_KEY__
-);
+import { supabase } from "./supabaseClient.js";
 
 // Load user profile on dashboard
 async function loadDashboard() {
@@ -50,14 +45,12 @@ async function deleteProfile() {
   const { data: { user }, error: userError } = await supabase.auth.getUser();
   if (userError || !user) return alert("No user logged in");
 
-  // Delete profile row
   const { error: deleteProfileError } = await supabase
     .from("profiles")
     .delete()
     .eq("id", user.id);
   if (deleteProfileError) return alert(deleteProfileError.message);
 
-  // Delete auth user
   const { error: deleteAuthError } = await supabase.auth.admin.deleteUser(user.id);
   if (deleteAuthError) return alert(deleteAuthError.message);
 
@@ -65,9 +58,8 @@ async function deleteProfile() {
   window.location.href = "index.html";
 }
 
-// Expose functions globally
+// Expose globally
 window.logout = logout;
 window.deleteProfile = deleteProfile;
 
-// Run on load
 loadDashboard();
