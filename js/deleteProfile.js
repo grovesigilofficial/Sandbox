@@ -1,24 +1,19 @@
 import { supabase } from "./supabaseClient.js";
 
 export async function deleteProfile() {
-  const user = supabase.auth.user();
-  if (!user) {
-    alert("Not logged in");
-    return;
-  }
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return alert("Not logged in");
 
-  const confirmation = confirm("Are you sure you want to delete your profile? This action cannot be undone.");
-  if (!confirmation) return;
+  const confirmed = confirm("Are you sure you want to delete your profile? This cannot be undone.");
+  if (!confirmed) return;
 
   try {
-    // Delete from profiles table
     const { error: profileError } = await supabase
       .from("profiles")
       .delete()
       .eq("id", user.id);
     if (profileError) throw profileError;
 
-    // Delete the auth user
     const { error: authError } = await supabase.auth.admin.deleteUser(user.id);
     if (authError) throw authError;
 
