@@ -1,76 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard</title>
+import { supabase } from "./supabaseClient.js";
 
-<script>
-  window.__SUPABASE_URL__="https://ylpsaftvxkedeujuclpp.supabase.co";
-  window.__SUPABASE_ANON_KEY__="sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp";
-</script>
+const usernameEl = document.getElementById("username");
+const emailEl = document.getElementById("email");
+const createdEl = document.getElementById("created");
+const logoutBtn = document.getElementById("logout");
 
-<style>
-body {
-  background: #000;
-  color: #ff3a3a;
-  font-family: Oswald, system-ui;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
+async function loadDashboard() {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  emailEl.textContent = session.user.email;
+
+  const { data: profile, error } = await supabase
+    .from("profiles")
+    .select("username, created_at")
+    .eq("id", session.user.id)
+    .single();
+
+  if (error) {
+    console.error(error);
+    usernameEl.textContent = "Profile error";
+    return;
+  }
+
+  usernameEl.textContent = profile.username;
+  createdEl.textContent = new Date(profile.created_at).toLocaleDateString();
 }
 
-.card {
-  background: #0b0b0b;
-  border: 1px solid #220000;
-  padding: 32px;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0 0 40px rgba(255,0,0,0.15);
-}
+logoutBtn.onclick = async () => {
+  await supabase.auth.signOut();
+  window.location.href = "index.html";
+};
 
-h1 {
-  margin: 0 0 8px;
-  font-size: 32px;
-}
-
-.meta {
-  opacity: 0.8;
-  margin-bottom: 24px;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  background: #ff3a3a;
-  color: #000;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-button:hover {
-  background: #ff5c5c;
-}
-
-#delete-profile-btn {
-  background: #990000;
-  color: #fff;
-}
-</style>
-</head>
-
-<body>
-  <div class="card">
-    <h1 id="username">Loading…</h1>
-    <div class="meta" id="email">Loading…</div>
-    <button onclick="logout()">Log Out</button>
-    <button id="delete-profile-btn" onclick="deleteProfile()">Delete Profile</button>
-  </div>
-
-<script type="module" src="/js/dashboard.js"></script>
-</body>
-</html>
+loadDashboard();
