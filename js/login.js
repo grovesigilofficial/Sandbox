@@ -1,7 +1,6 @@
-// js/login.js
 import { supabase } from "./supabaseClient.js";
 
-async function loginUser() {
+export async function loginUser() {
   const email = document.getElementById("login-email")?.value.trim();
   const password = document.getElementById("login-password")?.value;
 
@@ -15,26 +14,26 @@ async function loginUser() {
       email,
       password,
     });
+    if (error) throw error;
 
-    // If Supabase returns an error
-    if (error) {
-      // If user exists but hasn't confirmed email yet
-      if (error.message.includes("email not confirmed")) {
-        alert("Please check your email to confirm your account before logging in.");
-        return;
-      }
-      // Any other error
-      throw error;
+    // Fetch user profile
+    const { data: profiles, error: profileError } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", data.user.id)
+      .single();
+    if (profileError) throw profileError;
+
+    if (!data.user.confirmed_at) {
+      alert("Check your email to confirm your account before logging in.");
+      return;
     }
 
-    // If login successful
-    alert(`Login successful! Welcome back, ${data.user.user_metadata?.full_name || "User"}!`);
+    alert(`Welcome back ${profiles.full_name || "User"}!`);
     window.location.href = "dashboard.html";
-
   } catch (err) {
     console.error("Login error:", err);
-    // Friendly message for all failed attempts
-    alert("Login failed. If you just signed up, please check your email to confirm your account.");
+    alert(err.message || "Login failed");
   }
 }
 
