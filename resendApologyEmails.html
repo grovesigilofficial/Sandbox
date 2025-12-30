@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resend Confirmation Emails</title>
+
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+// Your Sandbox 1 Supabase keys
+const SUPABASE_URL = "https://ylpsaftvxkedeujuclpp.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+async function resendEmails() {
+  try {
+    const { data: users, error } = await supabase.auth.admin.listUsers();
+    if (error) throw error;
+
+    const unconfirmedUsers = users.filter(u => !u.confirmed_at);
+    console.log(`Found ${unconfirmedUsers.length} unconfirmed users.`);
+
+    for (const user of unconfirmedUsers) {
+      try {
+        await supabase.auth.admin.sendUserConfirmationEmail(user.id, {
+          templateId: null,
+          redirectTo: window.location.origin + "/index.html"
+        });
+
+        alert(`Confirmation email sent to ${user.email}!\n\nMessage: Sorry about the earlier issue, please confirm your account now!`);
+        console.log(`Email sent to: ${user.email}`);
+      } catch (e) {
+        console.error(`Failed for ${user.email}:`, e.message);
+      }
+    }
+
+    alert("All emails processed! Check console for details.");
+  } catch (err) {
+    console.error("Error fetching users:", err.message);
+    alert("Failed to fetch users, see console.");
+  }
+}
+
+window.onload = resendEmails;
+</script>
+</head>
+<body>
+<h2>Resending confirmation emails with apology…</h2>
+<p>Emails are being sent now. Each sent email will trigger a popup. Check console for full log.</p>
+</body>
+</html>
