@@ -1,3 +1,4 @@
+// js/auth.js
 import { supabase } from "./supabaseClient.js";
 
 export async function signupUser() {
@@ -7,34 +8,32 @@ export async function signupUser() {
   const fullName = document.getElementById("full-name")?.value.trim();
   const dob = document.getElementById("dob")?.value;
 
-  if (!email || !password || !username || !fullName || !dob) {
-    alert("All fields are required");
+  if (!email || !password || !username || !fullName) {
+    alert("Missing fields");
     return;
   }
 
-  try {
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-    if (authError) throw authError;
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+  });
 
-    // Insert profile data
-    const { error: profileError } = await supabase.from("profiles").insert({
-      id: authData.user.id,
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  if (data.user) {
+    await supabase.from("profiles").insert({
+      id: data.user.id,
       email,
       username,
       full_name: fullName,
-      dob,
+      dob: dob || null,
     });
-    if (profileError) throw profileError;
-
-    alert("Account created! Check your email to confirm your account.");
-    document.getElementById("signup-container").reset?.();
-  } catch (err) {
-    console.error("Signup error:", err);
-    alert(err.message || "Signup failed. Please try again.");
   }
+
+  alert("Account created. Check email.");
 }
 
 window.signupUser = signupUser;
