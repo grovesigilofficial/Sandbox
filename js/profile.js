@@ -1,3 +1,4 @@
+x// js/profile.js
 import { supabase } from "./supabaseClient.js";
 
 export async function signupUser() {
@@ -8,32 +9,50 @@ export async function signupUser() {
   const dob = document.getElementById("dob")?.value;
 
   if (!email || !password || !username || !fullName || !dob) {
-    alert("All fields are required");
+    alert("All fields are required to create an account.");
     return;
   }
 
   try {
+    // Sign up user in Auth
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
     });
     if (authError) throw authError;
 
-    const { error: profileError } = await supabase.from("profiles").insert({
-      id: authData.user.id,
-      email,
-      username,
-      full_name: fullName,
-      dob,
-    });
+    if (!authData.user) {
+      alert("Account creation failed unexpectedly.");
+      return;
+    }
+
+    // Insert user profile row
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .insert({
+        id: authData.user.id,
+        email,
+        username,
+        full_name: fullName,
+        dob,
+      });
     if (profileError) throw profileError;
 
-    alert("Account created! Check your email to confirm your account.");
-    document.getElementById("signup-container").reset?.();
+    alert(
+      "🎉 Your account has been successfully created! Please check your email to confirm your account before logging in."
+    );
+
+    // Reset signup form if exists
+    document.getElementById("signup-container")?.reset?.();
   } catch (err) {
     console.error("Signup error:", err);
-    alert(err.message || "Signup failed. Please try again.");
+    alert(
+      err.message ||
+        "There was an error creating your account. Please try again or check your input."
+    );
   }
 }
 
+// Expose globally for onclick
 window.signupUser = signupUser;
+
