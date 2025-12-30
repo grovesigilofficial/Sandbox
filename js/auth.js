@@ -1,10 +1,6 @@
-// js/auth.js
 import { supabase } from "./supabaseClient.js";
 
-/* =====================
-   SIGNUP HANDLER
-===================== */
-async function signupUser() {
+export async function signupUser() {
   const email = document.getElementById("email")?.value.trim();
   const password = document.getElementById("password")?.value;
   const username = document.getElementById("username")?.value.trim();
@@ -17,20 +13,13 @@ async function signupUser() {
   }
 
   try {
-    // Sign up user
-    const { data: authData, error: authError } = await supabase.auth.signUp(
-      { email, password },
-      { options: { emailRedirectTo: window.location.origin + "/login.html" } }
-    );
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+    if (authError) throw authError;
 
-    if (authError) {
-      // Show a friendly message even if Supabase rejects, for users who may have tried before
-      alert("Check your email — if your account already exists, you should have received a confirmation email!");
-      console.error("Signup error (non-blocking):", authError);
-      return;
-    }
-
-    // Insert profile in "profiles" table
+    // Insert profile data
     const { error: profileError } = await supabase.from("profiles").insert({
       id: authData.user.id,
       email,
@@ -38,19 +27,13 @@ async function signupUser() {
       full_name: fullName,
       dob,
     });
+    if (profileError) throw profileError;
 
-    if (profileError) {
-      console.error("Profile insert error:", profileError);
-      // still continue, the auth account exists and email sent
-    }
-
-    // Show friendly success
-    alert("Account created! Check the email you used to sign up.");
-    window.location.href = "login.html";
-
+    alert("Account created! Check your email to confirm your account.");
+    document.getElementById("signup-container").reset?.();
   } catch (err) {
-    console.error("Signup unexpected error:", err);
-    alert("Something went wrong. Please try again.");
+    console.error("Signup error:", err);
+    alert(err.message || "Signup failed. Please try again.");
   }
 }
 
