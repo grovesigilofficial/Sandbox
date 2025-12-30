@@ -1,4 +1,3 @@
-x// js/profile.js
 import { supabase } from "./supabaseClient.js";
 
 export async function signupUser() {
@@ -9,24 +8,26 @@ export async function signupUser() {
   const dob = document.getElementById("dob")?.value;
 
   if (!email || !password || !username || !fullName || !dob) {
-    alert("All fields are required to create an account.");
+    alert("All fields are required.");
     return;
   }
 
   try {
-    // Sign up user in Auth
+    // 1️⃣ Create the auth user
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
-      password,
+      password
     });
-    if (authError) throw authError;
 
-    if (!authData.user) {
-      alert("Account creation failed unexpectedly.");
-      return;
+    if (authError) {
+      throw new Error("Auth signup failed: " + authError.message);
     }
 
-    // Insert user profile row
+    if (!authData.user || !authData.user.id) {
+      throw new Error("Failed to create user account.");
+    }
+
+    // 2️⃣ Insert profile row
     const { error: profileError } = await supabase
       .from("profiles")
       .insert({
@@ -34,25 +35,24 @@ export async function signupUser() {
         email,
         username,
         full_name: fullName,
-        dob,
+        dob
       });
-    if (profileError) throw profileError;
 
-    alert(
-      "🎉 Your account has been successfully created! Please check your email to confirm your account before logging in."
-    );
+    if (profileError) {
+      throw new Error("Profile creation failed: " + profileError.message);
+    }
 
-    // Reset signup form if exists
-    document.getElementById("signup-container")?.reset?.();
+    // ✅ Success
+    alert("Your account was created successfully! Check your email to confirm your account.");
+
+    // Reset form if present
+    const form = document.getElementById("signup-container");
+    if (form?.reset) form.reset();
+
   } catch (err) {
     console.error("Signup error:", err);
-    alert(
-      err.message ||
-        "There was an error creating your account. Please try again or check your input."
-    );
+    alert(err.message || "Signup failed. Please try again.");
   }
 }
 
-// Expose globally for onclick
 window.signupUser = signupUser;
-
