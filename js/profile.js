@@ -1,3 +1,4 @@
+// js/profile.js
 import { supabase } from "./supabaseClient.js";
 
 const usernameInput = document.getElementById("username");
@@ -6,9 +7,8 @@ const emailInput = document.getElementById("email");
 const dobInput = document.getElementById("dob");
 
 async function loadProfile() {
-  const user = supabase.auth.user();
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
-    alert("Not logged in");
     window.location.href = "index.html";
     return;
   }
@@ -17,12 +17,9 @@ async function loadProfile() {
     .from("profiles")
     .select("username, full_name, email, dob")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
 
-  if (error) {
-    console.error("Error loading profile:", error);
-    return alert("Failed to load profile");
-  }
+  if (error || !data) return;
 
   usernameInput.value = data.username || "";
   fullNameInput.value = data.full_name || "";
@@ -31,13 +28,13 @@ async function loadProfile() {
 }
 
 async function updateProfile() {
-  const user = supabase.auth.user();
-  if (!user) return alert("Not logged in");
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
 
   const updates = {
     username: usernameInput.value.trim(),
     full_name: fullNameInput.value.trim(),
-    dob: dobInput.value
+    dob: dobInput.value || null,
   };
 
   const { error } = await supabase
@@ -46,17 +43,13 @@ async function updateProfile() {
     .eq("id", user.id);
 
   if (error) {
-    console.error("Error updating profile:", error);
-    return alert("Failed to update profile");
+    alert(error.message);
+    return;
   }
 
-  alert("Profile updated successfully!");
+  alert("Profile updated");
 }
 
-async function logout() {
-  await supabase.auth.signOut();
-  window.location.href = "index.html";
-}
+window.updateProfile = updateProfile;
 
-// Load profile on page load
 loadProfile();
