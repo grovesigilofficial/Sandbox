@@ -27,7 +27,7 @@ export async function signupUser() {
       throw new Error("Failed to create user account.");
     }
 
-    // 2️⃣ Insert profile row
+    // 2️⃣ Insert profile row using auth.uid
     const { error: profileError } = await supabase
       .from("profiles")
       .insert({
