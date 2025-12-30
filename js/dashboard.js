@@ -1,3 +1,4 @@
+// js/dashboard.js
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 const supabase = createClient(
@@ -5,12 +6,11 @@ const supabase = createClient(
   window.__SUPABASE_ANON_KEY__
 );
 
-// Load user profile on dashboard
 async function loadDashboard() {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    window.location.href = "index.html"; // redirect if not logged in
+    window.location.href = "index.html";
     return;
   }
 
@@ -18,9 +18,9 @@ async function loadDashboard() {
     .from("profiles")
     .select("username, full_name, email")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
 
-  if (error) {
+  if (error || !profile) {
     console.error("Error loading profile:", error);
     return;
   }
@@ -30,40 +30,32 @@ async function loadDashboard() {
   document.getElementById("email").textContent = profile.email;
 }
 
-// Logout function
 async function logout() {
   await supabase.auth.signOut();
   window.location.href = "index.html";
 }
 
-// Delete profile function
 async function deleteProfile() {
-  const confirmed = confirm(
-    "Are you sure you want to delete your profile? This action cannot be undone."
-  );
-  if (!confirmed) return;
+  if (!confirm("Are you sure you want to delete your profile?")) return;
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return alert("No user logged in");
+  if (!user) return;
 
-  // Delete profile row
-  const { error: deleteProfileError } = await supabase
+  const { error } = await supabase
     .from("profiles")
     .delete()
     .eq("id", user.id);
-  if (deleteProfileError) return alert(deleteProfileError.message);
 
-  // Delete auth user
-  const { error: deleteAuthError } = await supabase.auth.admin.deleteUser(user.id);
-  if (deleteAuthError) return alert(deleteAuthError.message);
+  if (error) {
+    alert(error.message);
+    return;
+  }
 
-  alert("Profile deleted successfully");
+  await supabase.auth.signOut();
   window.location.href = "index.html";
 }
 
-// Expose functions globally
 window.logout = logout;
 window.deleteProfile = deleteProfile;
 
-// Run on load
 loadDashboard();
