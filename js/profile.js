@@ -19,7 +19,6 @@ export async function signupUser() {
     });
     if (authError) throw authError;
 
-    // Insert profile data
     const { error: profileError } = await supabase.from("profiles").insert({
       id: authData.user.id,
       email,
