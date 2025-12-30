@@ -1,55 +1,40 @@
-// js/profile.js
 import { supabase } from "./supabaseClient.js";
 
-const usernameInput = document.getElementById("username");
-const fullNameInput = document.getElementById("full-name");
-const emailInput = document.getElementById("email");
-const dobInput = document.getElementById("dob");
+export async function signupUser() {
+  const email = document.getElementById("email")?.value.trim();
+  const password = document.getElementById("password")?.value;
+  const username = document.getElementById("username")?.value.trim();
+  const fullName = document.getElementById("full-name")?.value.trim();
+  const dob = document.getElementById("dob")?.value;
 
-async function loadProfile() {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    window.location.href = "index.html";
+  if (!email || !password || !username || !fullName || !dob) {
+    alert("All fields are required");
     return;
   }
 
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("username, full_name, email, dob")
-    .eq("id", user.id)
-    .maybeSingle();
+  try {
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+    if (authError) throw authError;
 
-  if (error || !data) return;
+    // Insert profile data
+    const { error: profileError } = await supabase.from("profiles").insert({
+      id: authData.user.id,
+      email,
+      username,
+      full_name: fullName,
+      dob,
+    });
+    if (profileError) throw profileError;
 
-  usernameInput.value = data.username || "";
-  fullNameInput.value = data.full_name || "";
-  emailInput.value = data.email || "";
-  dobInput.value = data.dob || "";
-}
-
-async function updateProfile() {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return;
-
-  const updates = {
-    username: usernameInput.value.trim(),
-    full_name: fullNameInput.value.trim(),
-    dob: dobInput.value || null,
-  };
-
-  const { error } = await supabase
-    .from("profiles")
-    .update(updates)
-    .eq("id", user.id);
-
-  if (error) {
-    alert(error.message);
-    return;
+    alert("Account created! Check your email to confirm your account.");
+    document.getElementById("signup-container").reset?.();
+  } catch (err) {
+    console.error("Signup error:", err);
+    alert(err.message || "Signup failed. Please try again.");
   }
-
-  alert("Profile updated");
 }
 
-window.updateProfile = updateProfile;
-
-loadProfile();
+window.signupUser = signupUser;
