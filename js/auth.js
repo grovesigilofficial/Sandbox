@@ -1,6 +1,9 @@
 // js/auth.js
 import { supabase } from "./supabaseClient.js";
 
+/* =====================
+   SIGNUP HANDLER
+===================== */
 async function signupUser() {
   const email = document.getElementById("email")?.value.trim();
   const password = document.getElementById("password")?.value;
@@ -14,19 +17,20 @@ async function signupUser() {
   }
 
   try {
-    // Sign up with metadata
-    const { data: authData, error: authError } = await supabase.auth.signUp(
-      { email, password },
-      {
+    // Create user in Supabase Auth
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
         data: {
+          username,
           full_name: fullName,
-          username: username,
-        }
-      }
-    );
+        },
+      },
+    });
     if (authError) throw authError;
 
-    // Insert profile into your "profiles" table
+    // Insert user profile into your table
     const { error: profileError } = await supabase
       .from("profiles")
       .insert({
@@ -38,11 +42,15 @@ async function signupUser() {
       });
     if (profileError) throw profileError;
 
-    alert("Account created! Check your email to confirm.");
+    alert(
+      "Account created successfully! ✅ Check your email to confirm your account."
+    );
     window.location.href = "index.html";
   } catch (err) {
     console.error("Signup error:", err);
-    alert(err.message || "Signup failed");
+    alert(
+      "Something went wrong during signup. If you already tried signing up, check your email."
+    );
   }
 }
 
