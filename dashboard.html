@@ -1,57 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard</title>
+<button onclick="deleteProfile()" style="margin-top:10px; background:#990000; color:#fff;">
+  Delete Profile
+</button>
 
-<script>
-window.__SUPABASE_URL__ = "https://ylpsaftvxkedeujuclpp.supabase.co";
-window.__SUPABASE_ANON_KEY__ = "sb_publishable_e8yqn4UcKQLZNvsNfm7ODA_mHeARKAp";
-</script>
+<script type="module">
+import { supabase } from "./supabaseClient.js";
 
-<style>
-body {
-  background: #000;
-  color: #ff3a3a;
-  font-family: Oswald, system-ui;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
+async function deleteProfile() {
+  if (!confirm("Are you sure you want to delete your profile? This cannot be undone.")) return;
+
+  try {
+    const user = supabase.auth.user();
+    if (!user) throw new Error("No user logged in");
+
+    // Delete the profile row
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .delete()
+      .eq("id", user.id);
+    if (profileError) throw profileError;
+
+    // Delete the auth account
+    const { error: authError } = await supabase.auth.admin.deleteUser(user.id);
+    if (authError) throw authError;
+
+    alert("Profile deleted successfully.");
+    window.location.href = "index.html"; // redirect to signup/login page
+  } catch (err) {
+    console.error("Error deleting profile:", err);
+    alert(err.message || "Failed to delete profile");
+  }
 }
-.card {
-  background: #0b0b0b;
-  border: 1px solid #220000;
-  padding: 32px;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0 0 40px rgba(255,0,0,0.15);
-}
-h1 { margin: 0 0 8px; font-size: 32px; }
-.meta { opacity: 0.8; margin-bottom: 8px; }
-button {
-  width: 100%;
-  padding: 12px;
-  background: #ff3a3a;
-  color: #000;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-}
-button:hover { background: #ff5c5c; }
-</style>
-</head>
 
-<body>
-<div class="card">
-  <h1 id="username">Loading…</h1>
-  <div class="meta" id="email"></div>
-  <div class="meta" id="joined"></div>
-  <button onclick="logout()">Log Out</button>
-</div>
-
-<script type="module" src="/js/dashboard.js"></script>
-</body>
-</html>
+window.deleteProfile = deleteProfile;
+  </script>
