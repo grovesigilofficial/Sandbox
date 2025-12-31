@@ -1,3 +1,4 @@
+// js/profile.js
 import { supabase } from "./supabaseClient.js";
 
 export async function signupUser() {
@@ -13,21 +14,24 @@ export async function signupUser() {
   }
 
   try {
-    // 1️⃣ Create the auth user
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password
-    });
+    // Create auth user
+    const { data: authData, error: authError } =
+      await supabase.auth.signUp({
+        email,
+        password
+      });
 
     if (authError) {
-      throw new Error("Auth signup failed: " + authError.message);
+      alert(authError.message);
+      return;
     }
 
-    if (!authData.user || !authData.user.id) {
-      throw new Error("Failed to create user account.");
+    if (!authData?.user?.id) {
+      alert("User was not created.");
+      return;
     }
 
-    // 2️⃣ Insert profile row using auth.uid
+    // Insert profile row
     const { error: profileError } = await supabase
       .from("profiles")
       .insert({
@@ -39,19 +43,19 @@ export async function signupUser() {
       });
 
     if (profileError) {
-      throw new Error("Profile creation failed: " + profileError.message);
+      alert(profileError.message);
+      return;
     }
 
-    // ✅ Success
-    alert("Your account was created successfully! Check your email to confirm your account.");
+    alert(
+      "Account created successfully. Please check your email to confirm your account."
+    );
 
-    // Reset form if present
     const form = document.getElementById("signup-container");
     if (form?.reset) form.reset();
 
   } catch (err) {
-    console.error("Signup error:", err);
-    alert(err.message || "Signup failed. Please try again.");
+    alert(err.message || "Signup failed.");
   }
 }
 
